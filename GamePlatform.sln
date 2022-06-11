@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31919.166
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GamePlatform", "GamePlatform\GamePlatform.csproj", "{32BF17E9-9BE2-4F28-B096-E91A8F7C0F6D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domino.Net", "Domino.Net\Domino.Net.csproj", "{CD08C924-F41D-4294-8691-40DDFF522101}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DominoPlatform", "DominoPlatform\DominoPlatform.csproj", "{2161DCB2-3849-48A7-9F6D-5EFD1B195BB5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarCraft", "StarCraft\StarCraft.csproj", "{74CA94F6-365F-4847-9DCD-D2FD5E768445}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarCraftPlatform", "StarCraftPlatform\StarCraftPlatform.csproj", "{7F4EEC66-E307-46AA-B92F-00E74B52E523}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{32BF17E9-9BE2-4F28-B096-E91A8F7C0F6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32BF17E9-9BE2-4F28-B096-E91A8F7C0F6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32BF17E9-9BE2-4F28-B096-E91A8F7C0F6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32BF17E9-9BE2-4F28-B096-E91A8F7C0F6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD08C924-F41D-4294-8691-40DDFF522101}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD08C924-F41D-4294-8691-40DDFF522101}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD08C924-F41D-4294-8691-40DDFF522101}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD08C924-F41D-4294-8691-40DDFF522101}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2161DCB2-3849-48A7-9F6D-5EFD1B195BB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2161DCB2-3849-48A7-9F6D-5EFD1B195BB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2161DCB2-3849-48A7-9F6D-5EFD1B195BB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2161DCB2-3849-48A7-9F6D-5EFD1B195BB5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74CA94F6-365F-4847-9DCD-D2FD5E768445}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74CA94F6-365F-4847-9DCD-D2FD5E768445}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74CA94F6-365F-4847-9DCD-D2FD5E768445}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74CA94F6-365F-4847-9DCD-D2FD5E768445}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F4EEC66-E307-46AA-B92F-00E74B52E523}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F4EEC66-E307-46AA-B92F-00E74B52E523}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F4EEC66-E307-46AA-B92F-00E74B52E523}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F4EEC66-E307-46AA-B92F-00E74B52E523}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {55AEEC6E-7D18-4220-A3FF-E0FF5C2AE529}
+	EndGlobalSection
+EndGlobal
