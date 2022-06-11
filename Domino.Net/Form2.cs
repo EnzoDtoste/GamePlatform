@@ -16,7 +16,7 @@ namespace Domino.Net
     {
 
         Form1 f1;
-
+        public string Type { get; protected set; }
         public Form2(Form1 f1)
         {
 
@@ -26,7 +26,7 @@ namespace Domino.Net
 
         }
 
-        void Initialize<F, T>(List<T> collection, List<int> values, Func<List<T>, PrintParameters, Image> print) where F: Ficha<T, Image>
+        public void Initialize<F, T>(List<T> collection, List<int> values, Func<List<T>, PrintParameters, Image> print) where F: Ficha<T, Image>
         {
             
             List<IConditions<T, Image>> conditions = new List<IConditions<T,Image>>();
@@ -83,17 +83,30 @@ namespace Domino.Net
         private void Form2_FormClosing(object sender, FormClosingEventArgs e)
         {
 
-            if (comboBox1.Text == "Int")
-                Initialize<FichaClassic<int>, int>(new List<int>() { 0, 1, 2, 3, 4, 5, 6 }, new List<int>() { 0, 1, 2, 3, 4, 5, 6 }, PrintInt);
-
-            else if(comboBox1.Text == "Int Multiple of 3")
-                Initialize<FichaInt3, int>(new List<int>() { 0, 1, 2, 3, 4, 5, 6 }, new List<int>() { 0, 1, 2, 3, 4, 5, 6 }, PrintInt);
-
-            else if (comboBox1.Text == "Color")
-                Initialize<FichaClassic<Color>, Color>(new List<Color>() { Color.Red, Color.Black, Color.Blue, Color.Brown, Color.Green, Color.Orange, Color.Violet }, new List<int>() { 0, 1, 2, 3, 4, 5, 6 }, PrintColor);
-
+           
+        }
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (listBox1.Items.Count > 0) listBox1.Items.Remove(listBox1.SelectedItem);
         }
 
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (listBox1.Items.Count > 1)
+            {
+                Type = comboBox1.Text;
+                if (Type == "Int")
+                    Initialize<FichaClassic<int>, int>(new List<int>() { 0, 1, 2, 3, 4, 5, 6 }, new List<int>() { 0, 1, 2, 3, 4, 5, 6 }, PrintInt);
+
+                else if (Type == "Int Multiple of 3")
+                    Initialize<FichaInt3, int>(new List<int>() { 0, 1, 2, 3, 4, 5, 6 }, new List<int>() { 0, 1, 2, 3, 4, 5, 6 }, PrintInt);
+
+                else if (Type == "Color")
+                    Initialize<FichaClassic<Color>, Color>(new List<Color>() { Color.Red, Color.Black, Color.Blue, Color.Brown, Color.Green, Color.Orange, Color.Violet }, new List<int>() { 0, 1, 2, 3, 4, 5, 6 }, PrintColor);
+                this.Hide();
+            }
+            else MessageBox.Show("There must be at least two players‼");
+        }
         private void radioButton4_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButton4.Checked)
@@ -183,7 +196,7 @@ namespace Domino.Net
 
         }
 
-        Image PrintColor(List<Color> sides, PrintParameters pp)
+        public Image PrintColor(List<Color> sides, PrintParameters pp)
         {
 
             DimFicha df = (DimFicha)pp;
@@ -221,7 +234,7 @@ namespace Domino.Net
             return ficha;
         }
 
-        Image PrintInt(List<int> sides, PrintParameters pp)
+        public Image PrintInt(List<int> sides, PrintParameters pp)
         {
 
             DimFicha df = (DimFicha)pp;
@@ -369,6 +382,7 @@ namespace Domino.Net
         
         }
 
+       
     }
 
     public class GenerateAllFichas<F, T> where F : Ficha<T, Image>

@@ -56,6 +56,7 @@
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.radioButton7 = new System.Windows.Forms.RadioButton();
             this.radioButton8 = new System.Windows.Forms.RadioButton();
+            this.button2 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
@@ -296,10 +297,16 @@
             // 
             this.listBox1.FormattingEnabled = true;
             this.listBox1.ItemHeight = 20;
+            this.listBox1.Items.AddRange(new object[] {
+            "Random Player",
+            "Random Player",
+            "Random Player",
+            "Random Player"});
             this.listBox1.Location = new System.Drawing.Point(12, 263);
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(356, 164);
             this.listBox1.TabIndex = 16;
+            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
             // comboBox2
             // 
@@ -422,11 +429,23 @@
             this.radioButton8.Text = "If Double Invert";
             this.radioButton8.UseVisualStyleBackColor = true;
             // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(576, 43);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(161, 43);
+            this.button2.TabIndex = 23;
+            this.button2.Text = "Start Game";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.DarkGray;
             this.ClientSize = new System.Drawing.Size(804, 601);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.checkBox3);
@@ -500,5 +519,6 @@
         private GroupBox groupBox5;
         private RadioButton radioButton7;
         private RadioButton radioButton8;
+        private Button button2;
     }
 }
