@@ -46,7 +46,7 @@ namespace StarCraftPlatform
 
         }
 
-        public void Attack()
+        public void Attack(PrintParameters pp)
         {
 
             if (Players[ActualPlayer].ActualWeapon != null && Players[ActualPlayer].Energy >= Players[ActualPlayer].ActualWeapon.EnergyWasted)
@@ -71,6 +71,8 @@ namespace StarCraftPlatform
 
                 Players[ActualPlayer].ReduceEnergy(Players[ActualPlayer].ActualWeapon.EnergyWasted);
 
+                Players[ActualPlayer].ActualWeapon.attackEffect(Players[ActualPlayer].ActualWeapon.Ratio, pp);
+
             }
 
         }
@@ -80,8 +82,28 @@ namespace StarCraftPlatform
 
             if(PlayersPositions[index].Item1 + dir.Item1 >= 0 && PlayersPositions[index].Item1 + dir.Item1 < Collection.GetLength(0) && PlayersPositions[index].Item2 + dir.Item2 >= 0 && PlayersPositions[index].Item2 + dir.Item2 < Collection.GetLength(1))
             {
+            
                 PlayersPositions[index] = (PlayersPositions[index].Item1 + dir.Item1, PlayersPositions[index].Item2);
                 PlayersPositions[index] = (PlayersPositions[index].Item1, PlayersPositions[index].Item2 + dir.Item2);
+
+                for (int i = 0; i <= 4; i++)
+                {
+
+                    for (int j = 0; j <= 4; j++)
+                    {
+
+                        if (PlayersPositions[index].Item1 - (2 - i) >= 0 && PlayersPositions[index].Item1 - (2 - i) < Collection.GetLength(0) && PlayersPositions[index].Item2 - (2 - j) >= 0 && PlayersPositions[index].Item2 - (2 - j) < Collection.GetLength(1) && Collection[PlayersPositions[index].Item1 - (2 - i), PlayersPositions[index].Item2 - (2 - j)] != null && Collection[PlayersPositions[index].Item1 - (2 - i), PlayersPositions[index].Item2 - (2 - j)] is Article<P>)
+                        {
+
+                            if (Players[index].AddArticle((Article<P>)Collection[PlayersPositions[index].Item1 - (2 - i), PlayersPositions[index].Item2 - (2 - j)]))
+                                Collection[PlayersPositions[index].Item1 - (2 - i), PlayersPositions[index].Item2 - (2 - j)] = null;
+
+                        }
+
+                    }
+
+                }
+
                 return true;
             }
 
@@ -105,9 +127,27 @@ namespace StarCraftPlatform
 
         public int Life { get; protected set; }
         public int Energy { get; protected set; }
+        public int CountArticles { 
+            
+            get
+            {
+
+                int count = 0;
+
+                for(int i = 0; i < Collection.Length; i++)
+                {
+                    if (Collection[i] != null)
+                        count++;
+                }
+
+                return count;
+
+            }
+            
+            }
 
         public bool IsDead { get { return dead; } protected set { dead = value; } }
-
+        
         public Weapon<P> ActualWeapon { get; protected set; }
 
         public StarPlayer(string name, Article<P>[] Collection, int life, int energy, P print) : base(Collection)
@@ -118,6 +158,19 @@ namespace StarCraftPlatform
             Life = life;
             Energy = energy;
             this.print = print;
+        }
+
+        public bool AddArticle(Article<P> article)
+        {
+           
+            for (int i = 0; i < Collection.Length; i++)
+            {
+                if (Collection[i] == null)
+                { Collection[i] = article; return true; }
+            }
+
+            return false;
+
         }
 
         public bool ApplyArticle(int index)
@@ -257,11 +310,14 @@ namespace StarCraftPlatform
 
         public int EnergyWasted { get; protected set; }
 
-        public Weapon(string name, int strength, int ratio, int energyWasted, P print, Func<P, string, string, PrintParameters, P> funcPrint): base(name, print, funcPrint)
+        internal AttackEffect attackEffect;
+
+        public Weapon(string name, int strength, int ratio, int energyWasted, P print, Func<P, string, string, PrintParameters, P> funcPrint, AttackEffect attackEffect): base(name, print, funcPrint)
         {
             Strength = strength;
             Ratio = ratio;
             EnergyWasted = energyWasted;
+            this.attackEffect = attackEffect;
         }
 
         public override P Print(PrintParameters pp)
@@ -353,5 +409,7 @@ namespace StarCraftPlatform
     { }
     public interface IStarPlayerPrint<P>: IPlayerPrint<Article<P>[], P>
     { }
+
+    public delegate void AttackEffect(int ratio, PrintParameters pp);
 
 }

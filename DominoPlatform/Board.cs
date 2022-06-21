@@ -329,7 +329,7 @@ namespace DominoPlatform
 
     public delegate int PassTurn<T, P>(List<Ficha<T, P>>[] Rounds, int actualPlayer);
 
-    public delegate int Winner<T, P>(in List<DominoPlayer<T, P>> players);
+    public delegate List<int> Winner<T, P>(in List<DominoPlayer<T, P>> players);
 
     #endregion
 

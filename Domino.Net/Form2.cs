@@ -292,15 +292,17 @@ namespace Domino.Net
             {
 
                 int menor = x[0].TotalValues();
-                int index = 0;
+                List<int> indexes = new List<int>() { 0 };
 
-                for (int i = 0; i < x.Count; i++)
+                for (int i = 1; i < x.Count; i++)
                 {
-                    if (x[i].TotalValues() < menor)
-                    { menor = x[i].TotalValues(); index = i; }
+                    if (x[i].TotalValues() == menor)
+                        indexes.Add(i);
+                    else if (x[i].TotalValues() < menor)
+                    { menor = x[i].TotalValues(); indexes = new List<int>() { i }; }
                 }
 
-                return index;
+                return indexes;
 
             };
         }
@@ -312,7 +314,7 @@ namespace Domino.Net
             {
 
                 int equal = 0;
-                int index = -1;
+                List<int> indexes = new List<int>();
 
                 for (int i = 0; i < x.Count; i++)
                 {
@@ -327,17 +329,22 @@ namespace Domino.Net
 
                             if (equals.ContainsKey(side))
                                 equals[side]++;
+                            else
+                                equals.Add(side, 1);
 
                         }
 
                     }
 
-                    if (equal < equals.Values.Max())
-                    { equal = equals.Values.Max(); index = i; }
+                    if(!(equals.Values.Count == 0 && equal != 0) && ((equals.Values.Count == 0 && equal == 0) || equal == equals.Values.Max()))
+                        indexes.Add(i);
+
+                    else if (equal < equals.Values.Max())
+                    { equal = equals.Values.Max(); indexes = new List<int>() { i }; }
 
                 }
 
-                return index;
+                return indexes;
 
             };
 
@@ -482,6 +489,11 @@ namespace Domino.Net
 
             g.DrawString("Player " + actualPlayer + " se pegó", new Font("Arial", 15, FontStyle.Bold), Brushes.Black, 200, 220);
 
+            var winners = winner(players);
+
+            for (int j = 0; j < winners.Count; j++)
+                g.DrawString("Player " + winners[j] + " ganó", new Font("Arial", 15, FontStyle.Bold), Brushes.Black, 200, 260 + j * 40);
+
             pictureBox.Image = i;
             pictureBox.Refresh();
 
@@ -533,6 +545,11 @@ namespace Domino.Net
             Graphics g = Graphics.FromImage(i);
 
             g.DrawString("Se Tranco", new Font("Arial", 15, FontStyle.Bold), Brushes.Black, 200, 220);
+
+            var winners = winner(players);
+
+            for (int j = 0; j < winners.Count; j++)
+                g.DrawString("Player " + winners[j] + " ganó", new Font("Arial", 15, FontStyle.Bold), Brushes.Black, 200, 260 + j * 40);
 
             pictureBox.Image = i;
 

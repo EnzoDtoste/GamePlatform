@@ -13,7 +13,7 @@ namespace StarCraft
 
             InitializeComponent();
 
-            Trash[,] elements = new Trash[100, 100];
+            Element<Image>[,] elements = new Element<Image>[100, 100];
 
             elements[3, 5] = new Trash("Bush", StarCraft.Properties.Resources.Bush);
             elements[8, 3] = new Trash("Rock", StarCraft.Properties.Resources.Rock);
@@ -25,17 +25,28 @@ namespace StarCraft
             Image sword = StarCraft.Properties.Resources.espada;
             sword.RotateFlip(RotateFlipType.RotateNoneFlipX);
 
-            Weapon<Image> sunWand = new Weapon<Image>("Sun Wand", 27, 8, 15, StarCraft.Properties.Resources.Vara, PrintObject);
-            Weapon<Image> goldWand = new Weapon<Image>("Gold Wand", 25, 7, 13, StarCraft.Properties.Resources.Wand, PrintObject);
-            Weapon<Image> infernalAxe = new Weapon<Image>("Infernal Axe", 35, 2, 10, StarCraft.Properties.Resources.Hacha, PrintObject);
-            Weapon<Image> mediumAxe = new Weapon<Image>("Medium Axe", 30, 4, 7, StarCraft.Properties.Resources.Axe, PrintObject);
-            Weapon<Image> redSword = new Weapon<Image>("Red Sword", 29, 5, 8, sword, PrintObject);
-            Weapon<Image> silverSword = new Weapon<Image>("Silver Sword", 25, 5, 8, StarCraft.Properties.Resources.sword, PrintObject);
+            Weapon<Image> sunWand = new Weapon<Image>("Sun Wand", 27, 8, 15, StarCraft.Properties.Resources.Vara, PrintObject, ClassicAttack);
+            Weapon<Image> goldWand = new Weapon<Image>("Gold Wand", 25, 7, 13, StarCraft.Properties.Resources.Wand, PrintObject, ClassicAttack);
+            Weapon<Image> infernalAxe = new Weapon<Image>("Infernal Axe", 35, 2, 10, StarCraft.Properties.Resources.Hacha, PrintObject, ClassicAttack);
+            Weapon<Image> mediumAxe = new Weapon<Image>("Medium Axe", 30, 4, 7, StarCraft.Properties.Resources.Axe, PrintObject, ClassicAttack);
+            Weapon<Image> redSword = new Weapon<Image>("Red Sword", 29, 5, 8, sword, PrintObject, ClassicAttack);
+            Weapon<Image> silverSword = new Weapon<Image>("Silver Sword", 25, 5, 8, StarCraft.Properties.Resources.sword, PrintObject, ClassicAttack);
 
             LifePotion<Image> blue = new LifePotion<Image>("Blue Potion", 50, StarCraft.Properties.Resources.blue_potion, PrintObject);
             LifePotion<Image> green = new LifePotion<Image>("Green Potion", -75, StarCraft.Properties.Resources.green_potion, PrintObject);
             EnergyPotion<Image> yellow = new EnergyPotion<Image>("Yellow Potion", 30, StarCraft.Properties.Resources.yellow_potion, PrintObject);
             DoublePotion < Image > doublepo = new DoublePotion<Image>("Double Potion", 25, StarCraft.Properties.Resources.double_potion, PrintObject);
+
+            elements[37, 45] = blue;
+            elements[13, 15] = green;
+            elements[38, 5] = yellow;
+            elements[76, 5] = doublepo;
+            elements[41, 28] = mediumAxe;
+            elements[6, 2] = silverSword;
+            elements[86, 89] = redSword;
+            elements[50, 50] = infernalAxe;
+            elements[24, 15] = goldWand;
+            elements[3, 10] = sunWand;
 
             List<StarPlayer<Image>> starPlayers = new List<StarPlayer<Image>>();
 
@@ -63,10 +74,51 @@ namespace StarCraft
             if (dimo.ShowData)
             {
                 g.DrawString(name, new Font("Arial", 8), Brushes.Black, 2, 2);
-                g.DrawString(description, new Font("Arial", 8), Brushes.Black, 2, dimo.Height - 2);
+                g.DrawString(description, new Font("Arial", 8), Brushes.Black, 2, dimo.Height - 20);
             }
 
             return b;
+
+        }
+
+        void ClassicAttack(int ratio, PrintParameters pp)
+        {
+
+            Location l = (Location)pp;
+
+            Image old = field.Print(new PrintGame(), StarCraft.Properties.Resources.fondo_tierra_clara, new DimObject(100, 100, true));
+
+            System.Windows.Forms.Timer t = new System.Windows.Forms.Timer();
+
+            int count = 0;
+
+            t.Interval = 150 / ratio;
+
+            t.Tick += delegate
+            {
+
+                if (count < ratio)
+                {
+
+                    Image e = new Bitmap(old);
+
+                    Graphics g = Graphics.FromImage(e);
+
+                    g.DrawEllipse(new Pen(Brushes.Red), l.x - count * 25, l.y - count * 25, count * 50, count * 50);
+
+                    pictureBox1.Image = e;
+                    pictureBox1.Refresh();
+
+                    count++;
+
+                }
+
+                else
+                { t.Stop(); pictureBox1.Image = old; }
+
+            };
+
+            t.Start();
 
         }
 
@@ -77,7 +129,7 @@ namespace StarCraft
             {
 
                 case Keys.A:
-                    field.Attack();
+                    field.Attack(new Location(375, 250));
                     pictureBox1.Image = field.Print(new PrintGame(), StarCraft.Properties.Resources.fondo_tierra_clara, new DimObject(100, 100, true));
                     pictureBox1.Refresh();
                     break;
@@ -326,6 +378,17 @@ namespace StarCraft
         }
 
     }
-    
+    public class Location: PrintParameters
+    {
+        public int x;
+        public int y;
+
+        public Location(int x, int y)
+        {
+            this.x = x;
+            this.y = y;
+        }
+
+    }
 
 }
