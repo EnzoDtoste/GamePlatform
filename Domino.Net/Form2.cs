@@ -159,7 +159,48 @@ namespace Domino.Net
             return validMoves[r.Next(validMoves.Count)];
 
         }
+        public (T, Ficha<T, Image>, int) PlaySmart<T>(List<Ficha<T, Image>>[] Rounds, List<T> sides, List<Ficha<T, Image>> hand)
+        {
+            List<(T, Ficha<T, Image>, int)> validMoves = GetValidMoves(sides, hand);
+            if (sides != null && validMoves.Count == 1) return validMoves[0];
 
+
+            int totalMoves = int.MaxValue;
+            int me = -1;
+            int mate;
+            int initialSize = (int)numericUpDown1.Value;
+            int[] playersHandSize = new int[Rounds.Length];
+            
+
+
+            for (int i = 0; i < Rounds.Length; i++)
+            {
+                var player = Rounds[i];
+                playersHandSize[i] = initialSize;
+                if (player.Count < totalMoves)
+                {
+                    totalMoves = player.Count;
+                    me = i;
+                }
+
+            }
+            if (Rounds.Length % 2 == 0 && Rounds.Length > 2)
+            {
+                int half = Rounds.Length / 2;
+                if (me + half < Rounds.Length - 1) mate = me + half;
+                else mate = me - half;
+
+            }
+
+
+
+
+
+
+
+
+            return validMoves[0];
+        }
         IEnumerable<Ficha<T, Image>> RandomDistribute<T>(List<Ficha<T, Image>> FichasCollection, int total)
         {
 
