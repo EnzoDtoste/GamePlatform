@@ -12,7 +12,7 @@ namespace DominoPlatform
         Ficha<T, P> ficha;
 
         List<TreeN<T, P>>[] hijos;
-
+        public int Count = 0;
         /// <summary>
         /// 
         /// </summary>
@@ -58,7 +58,9 @@ namespace DominoPlatform
                     if(hijos[i] != null && hijos[i].Count < this.ficha.plays_bySide)
                     { 
                         hijos[i].Add(new TreeN<T, P>(ficha, index_side));
+                        Count++;
                         return true;
+
                     }
 
                 }
@@ -171,5 +173,7 @@ namespace DominoPlatform
 
         }
 
+        
+        
     }
 }

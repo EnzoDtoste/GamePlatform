@@ -70,17 +70,7 @@ namespace Domino.Net
 
         }
 
-        private void startSameGameToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (Stats.Type == "Int")
-                Stats.Initialize<FichaClassic<int>, int>(new List<int>() { 0, 1, 2, 3, 4, 5, 6 }, new List<int>() { 0, 1, 2, 3, 4, 5, 6 }, Stats.PrintInt);
-
-            else if (Stats.Type == "Int Multiple of 3")
-                Stats.Initialize<FichaInt3, int>(new List<int>() { 0, 1, 2, 3, 4, 5, 6 }, new List<int>() { 0, 1, 2, 3, 4, 5, 6 }, Stats.PrintInt);
-
-            else if (Stats.Type == "Color")
-                Stats.Initialize<FichaClassic<Color>, Color>(new List<Color>() { Color.Red, Color.Black, Color.Blue, Color.Brown, Color.Green, Color.Orange, Color.Violet }, new List<int>() { 0, 1, 2, 3, 4, 5, 6 }, Stats.PrintColor);
-        }
+        
 
         private void startNewGameToolStripMenuItem_Click(object sender, EventArgs e)
         {

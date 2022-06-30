@@ -1,5 +1,6 @@
 ﻿using GamePlatform;
 
+
 namespace DominoPlatform
 {
 
@@ -14,12 +15,12 @@ namespace DominoPlatform
         List<Ficha<T, P>> FichasAfuera;
 
         List<Ficha<T, P>>[] rounds;
-
+        
         int pass;
 
         private Board(TreeN<T, P> Collection, IEnumerable<DominoPlayer<T, P>> Players, GenerateFichas<T, P> GenerateFichas, Distribute<T, P> initialDistribute, int initialHand, PassTurn<T, P> pass) : base(Collection, Players)
         {
-
+            this.Collection = Collection;
             rounds = new List<Ficha<T, P>>[this.Players.Count];
 
             for (int i = 0; i < rounds.Length; i++)
@@ -132,7 +133,11 @@ namespace DominoPlatform
                     { Players[ActualPlayer].Collection.Add(f); return true; }
 
                     else
+                    {
                         rounds[ActualPlayer].Add(null);
+                        
+                    }
+                        
 
                 }
 
@@ -253,7 +258,25 @@ namespace DominoPlatform
 
         public override bool EqualsTo(Element<P> other)
         {
-            throw new NotImplementedException();
+            Ficha<T,P> f = (Ficha<T,P>)other;
+            List<T> f1Num = new List<T>();
+            foreach (T x in this.sides) f1Num.Add(x);
+            List<T> f2Num = new List<T>();
+            foreach (T y in f.sides) f2Num.Add(y);
+
+            for (int i = 0; i < f1Num.Count; i++)
+            {
+                T x = f1Num[i];
+
+                if (f2Num.Contains(x))
+                {
+                    f1Num.Remove(x);
+                    f2Num.Remove(x);
+                    i--;
+                }
+            }
+            return f1Num.Count == 0 && f2Num.Count == 0;
+           
         }
 
         public override P Print(PrintParameters pp)
