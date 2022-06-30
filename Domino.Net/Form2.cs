@@ -130,7 +130,7 @@ namespace Domino.Net
 
             }
 
-            return (hand[0].sides[0], null, -1);
+            return (sides[0], null, -1);
 
         }
 
@@ -143,7 +143,7 @@ namespace Domino.Net
                 return (hand[0].sides[0], hand[0], -1);
 
             List<(T, Ficha<T, Image>, int)> validMoves = GetValidMoves(sides, hand);
-            return validMoves[r.Next(validMoves.Count)];
+            return validMoves.Count > 0 ? validMoves[r.Next(validMoves.Count)] : (sides[0], null, -1);
 
         }
 
@@ -369,8 +369,6 @@ namespace Domino.Net
 
                 }
             }
-            
-            if (validMoves.Count == 0) validMoves.Add((hand[0].sides[0], null, -1));
             
             return validMoves;
         
