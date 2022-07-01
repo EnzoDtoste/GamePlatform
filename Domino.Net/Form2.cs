@@ -623,7 +623,7 @@ namespace Domino.Net
                 System.Media.SoundPlayer estoyPegao = new System.Media.SoundPlayer(Properties.Resources.untitled_2022_06_30_23_15_09_REC__consolidated_);
                 estoyPegao.Play();
                 var winners = winner(players);
-
+                
                 for (int j = 0; j < winners.Count; j++)
                     g.DrawString("Player " + winners[j] + " ganó", new Font("Arial", 15, FontStyle.Bold), Brushes.Black, 280, 200 + j * 40);
 
