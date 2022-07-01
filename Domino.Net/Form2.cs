@@ -193,6 +193,17 @@ namespace Domino.Net
 
             listBox1.Items.Add(comboBox2.Text);
 
+            long all = CollectionCount();
+
+            if (numericUpDown1.Value > all / listBox1.Items.Count)
+            {
+                if (all / listBox1.Items.Count == 0)
+                    listBox1.Items.RemoveAt(listBox1.Items.Count - 1);
+
+                else
+                    numericUpDown1.Value = all / listBox1.Items.Count;
+            }
+
         }
         
        
