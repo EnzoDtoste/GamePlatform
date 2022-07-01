@@ -89,16 +89,16 @@ namespace DominoPlatform
         public bool PlayTurn(PassTurn<T, P> passTurn, bool robar, Winner<T, P> winner, params IConditions<T, P>[] endConditions)
         {
 
-            if (Players[ActualPlayer].Enabled)
+            if (Players[ActualPlayer].Enabled && (Players[ActualPlayer].Collection.Count > 0 || robar))
             {
 
                 (T, Ficha<T, P>, int) ficha;
 
                 if (this.Collection != null)
-                    ficha = ((DominoPlayer<T, P>)Players[ActualPlayer]).Play(rounds, Collection.AvailableSides());
+                    ficha = Players[ActualPlayer].Play(rounds, Collection.AvailableSides());
 
                 else
-                    ficha = ((DominoPlayer<T, P>)Players[ActualPlayer]).Play(rounds, null);
+                    ficha = Players[ActualPlayer].Play(rounds, null);
 
                 if (ficha.Item2 != null)
                 {
