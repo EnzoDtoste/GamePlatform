@@ -131,6 +131,15 @@ namespace Domino.Net.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream applause___Part_1 {
+            get {
+                return ResourceManager.GetStream("applause___Part_1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
         internal static System.Drawing.Icon icons8_Explosion {
@@ -171,12 +180,30 @@ namespace Domino.Net.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream mesa_de_noche_3__consolidated_ {
+            get {
+                return ResourceManager.GetStream("mesa_de_noche_3__consolidated_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap table {
             get {
                 object obj = ResourceManager.GetObject("table", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream untitled_2022_06_30_23_15_09_REC__consolidated_ {
+            get {
+                return ResourceManager.GetStream("untitled_2022_06_30_23_15_09_REC__consolidated_", resourceCulture);
             }
         }
     }
