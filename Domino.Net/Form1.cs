@@ -1,5 +1,4 @@
 ﻿using DominoPlatform;
-using GamePlatform;
 
 namespace Domino.Net
 {
@@ -19,9 +18,8 @@ namespace Domino.Net
             
             InitializeComponent();
 
-            Form2 f2 = new Form2(this);
-            f2.ShowDialog();
-            Stats = f2;
+            Stats = new Form2(this);
+            Stats.ShowDialog();
             
             pictureBox1.Image = board.Print(print, new DimFicha(80, 47));
             timer1.Start();
@@ -51,7 +49,7 @@ namespace Domino.Net
 
         }
 
-        public void Initialize<F, T>(GenerateFichas<T, Image> generate, Distribute<T, Image> distribute, bool robar, List<PlayFicha<T, Image>> players, IEnvironmentPrint<TreeN<T, Image>, DominoPlayer<T, Image>, List<Ficha<T, Image>>, Image> print, PassTurn<T, Image> pass, Winner<T, Image> winner, int InitialHand, params IConditions<T, Image>[] conditions) where F: Ficha<T, Image>
+        public void Initialize<F, T>(GenerateFichas<T, Image> generate, Distribute<T, Image> distribute, bool robar, List<PlayFicha<T, Image>> players, IBoardPrint<T, Image> print, PassTurn<T, Image> pass, Winner<T, Image> winner, int InitialHand, params IConditions<T, Image>[] conditions) where F: Ficha<T, Image>
         {
             
             List<DominoPlayer<T, Image>> dominoPlayers = new List<DominoPlayer<T, Image>>();
@@ -70,16 +68,9 @@ namespace Domino.Net
 
         }
 
-        
-
         private void startNewGameToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.Hide();
             this.Stats.ShowDialog();
-
-            this.Show();
-            pictureBox1.Image = board.Print(print, new DimFicha(80, 47));
-            timer1.Start();
         }
 
         private void button1_Click(object sender, EventArgs e)

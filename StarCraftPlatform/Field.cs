@@ -183,7 +183,7 @@ namespace StarCraftPlatform
                 {
 
                     Potion<P> potion = (Potion<P>)Collection[index];
-                    RemoveELement(Remove(), potion);
+                    Remove(potion);
 
                     return ApplyPotion(potion);
 
@@ -255,27 +255,23 @@ namespace StarCraftPlatform
 
         }
 
-        public RemoveElementFromCollection<Article<P>[], P> Remove()
+        public void Remove(Article<P> y)
         {
 
-            return (x, y) => {
+            bool found = false;
 
-                bool found = false;
+            for (int i = 0; i < Collection.Length - 1; i++)
+            {
 
-                for (int i = 0; i < x.Length - 1; i++)
-                {
+                if (!found && Collection[i].EqualsTo(y))
+                    found = true;
 
-                    if(!found && x[i].EqualsTo(y))
-                        found = true;
+                if (found)
+                    Collection[i] = Collection[i + 1];
 
-                    if (found)
-                        Collection[i] = Collection[i + 1];
+            }
 
-                }
-
-                Collection[Collection.Length - 1] = null;
-
-            };
+            Collection[Collection.Length - 1] = null;
 
         }
 

@@ -299,7 +299,7 @@ namespace DominoPlatform
             (T, Ficha<T, P>, int) ficha = Jugador(Rounds, sides, Collection);
 
             if (ficha.Item2 != null)
-                RemoveELement(Board<T, P>.Remove, ficha.Item2);
+                Board<T, P>.Remove(Collection, ficha.Item2);
 
             return ficha;
 

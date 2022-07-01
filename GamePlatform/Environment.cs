@@ -36,29 +36,6 @@ namespace GamePlatform
 
         }
 
-        public void AddPlayer(BT Collection)
-        { Players.Add((B)Activator.CreateInstance(typeof(B), Collection)); }
-
-        public bool ContainsElement(EnvironmentContainsElement<P> ee, Element<P> e)
-        {
-            return ee(e);
-        }
-
-        public bool PlayerContainsElement(PlayerContainsElement<Player<BT, P>, P> pe, Element<P> e)
-        {
-
-            foreach (B p in this.Players)
-            { 
-            
-                if(p.Contains(pe, e))
-                    return true;
-            
-            }
-
-            return false;
-
-        }
-
         public P Print(IEnvironmentPrint<T, B, BT, P> print, PrintParameters pp)
         {
             return print.Print(this, pp);
@@ -85,13 +62,6 @@ namespace GamePlatform
         {
             this.Collection = Collection;
         }
-
-        public void RemoveELement(RemoveElementFromCollection<T,P> ir, Element<P> e)
-        { 
-           ir(Collection, e);
-        }
-        public bool Contains(PlayerContainsElement<Player<T, P>, P> ie, Element<P> e)
-        { return ie(this, e); }
 
         public P Print(IPlayerPrint<T, P> print, PrintParameters pp)
         { return print.Print(Collection, pp); }
@@ -124,14 +94,5 @@ namespace GamePlatform
 
     #endregion
 
-    #region Delegates
-
-    public delegate bool EnvironmentContainsElement<T>(Element<T> e);
-
-    public delegate bool PlayerContainsElement<T, P>(T player, Element<P> e);
-
-    public delegate void RemoveElementFromCollection<T, P>(T Collection, Element<P> e);
-
-    #endregion
 
 }

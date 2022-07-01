@@ -16,8 +16,7 @@ namespace Domino.Net
     {
 
         Form1 f1;
-        public string Type { get; protected set; }
-
+        
         public Form2(Form1 f1)
         {
 
@@ -91,15 +90,16 @@ namespace Domino.Net
         }
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
+
+            listBox1.Items.Remove(listBox1.SelectedItem);
+
             if (listBox1.Items.Count > 0)
             {
-                listBox1.Items.Remove(listBox1.SelectedItem);
                 long all = CollectionCount();
                 if(numericUpDown1.Value > all / listBox1.Items.Count)
                 {
                     numericUpDown1.Value = all/ listBox1.Items.Count;
                 }
-
             } 
                 
 
@@ -109,19 +109,20 @@ namespace Domino.Net
         {
             if (listBox1.Items.Count > 1)
             {
-                Type = comboBox1.Text;
-                if (Type == "Int")
+                
+                if (comboBox1.Text == "Int")
                     Initialize<FichaClassic<int>, int>(new List<int>() { 0, 1, 2, 3, 4, 5, 6 }, new List<int>() { 1, 2, 3, 4, 5, 6, 7 }, PrintInt);
 
-                else if (Type == "Int Multiple of 3")
+                else if (comboBox1.Text == "Int Multiple of 3")
                     Initialize<FichaInt3, int>(new List<int>() { 0, 1, 2, 3, 4, 5, 6 }, new List<int>() { 1, 2, 3, 4, 5, 6, 7 }, PrintInt);
 
-                else if (Type == "Color")
+                else if (comboBox1.Text == "Color")
                     Initialize<FichaClassic<Color>, Color>(new List<Color>() { Color.Red, Color.Black, Color.Blue, Color.Brown, Color.Green, Color.Orange, Color.Violet }, new List<int>() { 1, 2, 3, 4, 5, 6, 7 }, PrintColor);
                 this.Hide();
             }
             else MessageBox.Show("There must be at least two players‼");
         }
+
         private void radioButton4_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButton4.Checked)
@@ -134,6 +135,7 @@ namespace Domino.Net
             else
                 numericUpDown5.Enabled = false;
         }
+
         private void numericUpDown5_ValueChanged(object sender, EventArgs e)
         {
 
@@ -145,6 +147,7 @@ namespace Domino.Net
                 numericUpDown1.Value = numericUpDown5.Value/ listBox1.Items.Count;
             }
         }
+
         private void numericUpDown3_ValueChanged(object sender, EventArgs e)
         {
             if (numericUpDown3.Value > 10) numericUpDown3.Value = 10;
@@ -158,6 +161,7 @@ namespace Domino.Net
                 numericUpDown1.Value = all / listBox1.Items.Count;
             }
         }
+
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
             if ((CollectionCount() / listBox1.Items.Count) < (int)numericUpDown1.Value)
@@ -167,11 +171,13 @@ namespace Domino.Net
                 numericUpDown1.Value = (int)numericUpDown5.Value/ listBox1.Items.Count;
             }
         }
+
         public long CollectionCount()
         {
             int sides = (int)numericUpDown3.Value;
             return Factorial(7 + sides - 1) / (Factorial(sides) * Factorial(6));
         }
+
         public long Factorial(int num)
         {
             long result = 1;
@@ -181,6 +187,7 @@ namespace Domino.Net
             }
             return result;
         }
+
         private void button1_Click(object sender, EventArgs e)
         {
 
@@ -226,6 +233,7 @@ namespace Domino.Net
             return validMoves.Count > 0 ? validMoves[r.Next(validMoves.Count)] : (sides[0], null, -1);
 
         }
+
         public (T, Ficha<T, Image>, int) BotaGorda<T>(List<Ficha<T, Image>>[] Rounds, List<T> sides, List<Ficha<T, Image>> hand)
         {
            return Botador(true, Rounds, sides, hand);
@@ -234,19 +242,24 @@ namespace Domino.Net
         {
             return Botador(false, Rounds, sides, hand);
         }
+
         private (T, Ficha<T, Image>, int) Botador<T>(bool botador,List<Ficha<T, Image>>[] Rounds, List<T> sides, List<Ficha<T, Image>> hand)
         {
+           
             if (sides == null)
             {
                 Ficha<T, Image> best = hand[0];
                 foreach (var ficha in hand)
                 {
-                    if (botador? ficha.TotalValue() >best.TotalValue() : ficha.TotalValue() < best.TotalValue()) best = ficha;
+                    if (botador? ficha.TotalValue() > best.TotalValue() : ficha.TotalValue() < best.TotalValue()) best = ficha;
                 }
                 return (hand[0].sides[0], best, -1);
             }
+
             List<(T, Ficha<T, Image>, int)> validMoves = GetValidMoves(sides, hand);
+
             if (validMoves.Count == 0) return (sides[0], null, -1);
+
             (T, Ficha<T, Image>, int) Best = validMoves[0];
 
             foreach (var play in validMoves)
@@ -259,6 +272,7 @@ namespace Domino.Net
 
 
             }
+
             return Best;
         }
        
@@ -747,7 +761,7 @@ namespace Domino.Net
                 tocarMesa.Play();
                 
            }
-            g.DrawString("Player " + board.ActualPlayer, new Font("Arial", 15, FontStyle.Bold), Brushes.Black, 550, 400);
+            g.DrawString("Player " + board.ActualPlayer, new Font("Arial", 15, FontStyle.Bold), Brushes.Black, 550, 380);
 
             return image;
 
