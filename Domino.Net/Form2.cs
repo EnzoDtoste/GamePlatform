@@ -210,7 +210,7 @@ namespace Domino.Net
 
             }
             
-            return (hand[0].sides[0], null, -1);
+            return (sides[0], null, -1);
 
         }
 
@@ -246,6 +246,7 @@ namespace Domino.Net
                 return (hand[0].sides[0], best, -1);
             }
             List<(T, Ficha<T, Image>, int)> validMoves = GetValidMoves(sides, hand);
+            if (validMoves.Count == 0) return (sides[0], null, -1);
             (T, Ficha<T, Image>, int) Best = validMoves[0];
 
             foreach (var play in validMoves)
@@ -609,26 +610,29 @@ namespace Domino.Net
 
         public bool Finish(in List<DominoPlayer<T, Image>> players, int actualPlayer, Winner<T, Image> winner)
         {
-
-            Image i = new Bitmap(750, 450);
-
-            Graphics g = Graphics.FromImage(i);
-            RectangleF table = new RectangleF(0, 0, 750, 450);
-            Rectangle win = new Rectangle(350, 85, 80, 60);
-            g.DrawImage(Properties.Resources.table, table);
-            g.DrawIcon(Properties.Resources.icons8_Win, win);
-            g.DrawString("Player " + actualPlayer + " se pegó", new Font("Arial", 15, FontStyle.Bold), Brushes.Black, 280, 150);
-
-            var winners = winner(players);
-
-            for (int j = 0; j < winners.Count; j++)
-                g.DrawString("Player " + winners[j] + " ganó", new Font("Arial", 15, FontStyle.Bold), Brushes.Black, 280, 200 + j * 40);
-
-            pictureBox.Image = i;
-            pictureBox.Refresh();
-
             if (endgame)
+            {
+                Image i = new Bitmap(750, 450);
+
+                Graphics g = Graphics.FromImage(i);
+                RectangleF table = new RectangleF(0, 0, 750, 450);
+                Rectangle win = new Rectangle(350, 85, 80, 60);
+                g.DrawImage(Properties.Resources.table, table);
+                g.DrawIcon(Properties.Resources.icons8_Win, win);
+                g.DrawString("Player " + actualPlayer + " se pegó", new Font("Arial", 15, FontStyle.Bold), Brushes.Black, 280, 150);
+                System.Media.SoundPlayer estoyPegao = new System.Media.SoundPlayer(Properties.Resources.untitled_2022_06_30_23_15_09_REC__consolidated_);
+                estoyPegao.Play();
+                var winners = winner(players);
+
+                for (int j = 0; j < winners.Count; j++)
+                    g.DrawString("Player " + winners[j] + " ganó", new Font("Arial", 15, FontStyle.Bold), Brushes.Black, 280, 200 + j * 40);
+
+                pictureBox.Image = i;
+                pictureBox.Refresh();
+
+
                 return true;
+            }
 
             players[actualPlayer].Enabled = false;
             return false;
@@ -678,6 +682,8 @@ namespace Domino.Net
             g.DrawImage(Properties.Resources.table, table);
             g.DrawIcon(Properties.Resources.icons8_Win, win);
             g.DrawString("Se Tranco", new Font("Arial", 15, FontStyle.Bold), Brushes.Black, 280, 150);
+            System.Media.SoundPlayer applause = new System.Media.SoundPlayer(Properties.Resources.applause___Part_1);
+            applause.Play();
 
             var winners = winner(players);
 
@@ -731,12 +737,15 @@ namespace Domino.Net
 
             g.DrawImage(board.Players[board.ActualPlayer].Print(new PrintHand<T>(), pp), 200, 350);
             
-           if(board.Collection != null && Form2.GetValidMoves(board.Collection.AvailableSides(),board.Players[board.ActualPlayer].Collection)[0].Item2 == null)
+           if(board.Collection != null && Form2.GetValidMoves(board.Collection.AvailableSides(),board.Players[board.ActualPlayer].Collection).Count == 0)
            {
                 Rectangle passE = new Rectangle(600, 340, 40, 40);
                 Rectangle passH = new Rectangle(594, 361, 52, 52);
                 g.DrawIcon(Properties.Resources.icons8_Explosion, passE);
                 g.DrawIcon(Properties.Resources.icons8_Hand_Rock, passH);
+                System.Media.SoundPlayer tocarMesa = new System.Media.SoundPlayer(Properties.Resources.mesa_de_noche_3__consolidated_);
+                tocarMesa.Play();
+                
            }
             g.DrawString("Player " + board.ActualPlayer, new Font("Arial", 15, FontStyle.Bold), Brushes.Black, 550, 400);
 
