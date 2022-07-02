@@ -418,7 +418,7 @@ namespace Domino.Net
             return rarest;
 
         }
-
+        
         IEnumerable<Ficha<T, Image>> RandomDistribute<T>(List<Ficha<T, Image>> FichasCollection, int total)
         {
 
@@ -871,8 +871,8 @@ namespace Domino.Net
             
            if(board.Collection != null && Form2.GetValidMoves(board.Collection.AvailableSides(),board.Players[board.ActualPlayer].Collection).Count == 0)
            {
-                Rectangle passE = new Rectangle(600, 340, 40, 40);
-                Rectangle passH = new Rectangle(594, 361, 52, 52);
+                Rectangle passE = new Rectangle(650, 340, 40, 40);
+                Rectangle passH = new Rectangle(644, 361, 52, 52);
                 g.DrawIcon(Properties.Resources.icons8_Explosion, passE);
                 g.DrawIcon(Properties.Resources.icons8_Hand_Rock, passH);
                 System.Media.SoundPlayer tocarMesa = new System.Media.SoundPlayer(Properties.Resources.mesa_de_noche_3__consolidated_);
