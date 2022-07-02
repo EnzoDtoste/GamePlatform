@@ -22,7 +22,7 @@ namespace Domino.Net
             Stats.ShowDialog();
             
             pictureBox1.Image = board.Print(print, new DimFicha(80, 47));
-            timer1.Start();
+            
 
         }
 
@@ -65,6 +65,8 @@ namespace Domino.Net
             this.winner = winner;
             this.conditions = conditions;
             this.robar = robar;
+
+            timer1.Start();
 
         }
 

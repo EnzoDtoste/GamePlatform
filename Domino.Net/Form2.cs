@@ -77,6 +77,8 @@ namespace Domino.Net
                     players.Add(BotaGorda);
                 else if (player.ToString() == "Bota Suave Player")
                     players.Add(BotaSuave);
+                else if (player.ToString() == "Smart Player")
+                    players.Add(PlaySmart);
             }
 
             f1.Initialize<F, T>(generate, distribute, checkBox2.Checked, players, new PrintGame<T>(), pass, winner, (int)numericUpDown1.Value, conditions.ToArray());
@@ -286,30 +288,135 @@ namespace Domino.Net
 
             return Best;
         }
-       
+
         public (T, Ficha<T, Image>, int) PlaySmart<T>(List<Ficha<T, Image>>[] Rounds, List<T> sides, List<Ficha<T, Image>> hand)
         {
-            List<(T, Ficha<T, Image>, int)> validMoves = GetValidMoves(sides, hand);
-            if (sides != null && validMoves.Count == 1) return validMoves[0];
-            int players = Rounds.Length;
-            bool max = false;
-            (T, Ficha<T, Image>, int) bestPlay;
-            double bestMark = double.MinValue;
-            foreach(var play in validMoves)
-            {
-                double mark = Minimax(play, 4, players, max);
-                if(mark > bestMark)
-                {
-                    bestMark = mark; bestPlay = play;
-                }
-            }
-            return validMoves[0];
-        }
 
-        private double Minimax<T>((T, Ficha<T, Image>, int) play, int deep, int players, bool max)
-        {
-            if (deep == 0) ;
-            return Minimax(play, deep, players, true);
+            if (sides == null)
+            {
+
+                int max = 0;
+                Ficha<T, Image> best = null;
+
+                foreach (var f in hand)
+                {
+
+                    int count = 0;
+
+                    foreach (var ficha in hand)
+                    {
+
+                        foreach (var side in f.sides)
+                        {
+
+                            if (ficha.sides.Contains(side))
+                                count++;
+
+                        }
+
+                    }
+
+                    if(count > max)
+                    {
+                        max = count;
+                        best = f;
+                    }
+
+                }
+
+                return (hand[0].sides[0], best, -1);
+
+            }
+
+            var moves = GetValidMoves(sides, hand);
+
+            (T, Ficha<T, Image>, int) rarest = (sides[0], null, -1);
+            double ind = -1;
+
+            foreach (var play in moves)
+            {
+
+                Dictionary<T, int> data = new Dictionary<T, int>();
+
+                List<int> rareza = new List<int>();
+
+                for (int i = 0; i < play.Item2.sides.Count; i++)
+                {
+
+                    if (i != play.Item3)
+                    {
+
+                        if (data.ContainsKey(play.Item2.sides[i]))
+                            rareza.Add(data[play.Item2.sides[i]]);
+
+                        else
+                        {
+
+                            int count = 0;
+
+                            foreach (var item in Rounds)
+                            {
+
+                                foreach (var f in item)
+                                {
+
+                                    if (f != null && f.sides.Contains(play.Item2.sides[i]))
+                                        count++;
+
+                                }
+
+                            }
+
+                            data.Add(play.Item2.sides[i], count);
+                            rareza.Add(count);
+
+                        }
+
+                    }
+
+                }
+
+                List<int> ihave = new List<int>();
+
+                for (int i = 0; i < play.Item2.sides.Count; i++)
+                {
+
+                    if (i != play.Item3)
+                    {
+
+                        int count = 0;
+
+                        foreach (var ficha in hand)
+                        {
+
+                            if (!ficha.EqualsTo(play.Item2))
+                            {
+
+                                if (ficha.sides.Contains(play.Item2.sides[i]))
+                                    count++;
+
+                            }
+
+                        }
+
+                        ihave.Add(count);
+
+                    }
+
+                }
+
+                double prom = (((double)rareza.Sum() / (double)rareza.Count) + ((double)ihave.Sum() / (double)ihave.Count)) / 2.0;
+
+                if (prom > ind)
+                {
+                    ind = prom;
+                    rarest = play;
+                }
+
+            }
+
+            return rarest;
+
         }
 
         IEnumerable<Ficha<T, Image>> RandomDistribute<T>(List<Ficha<T, Image>> FichasCollection, int total)
