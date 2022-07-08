@@ -7,7 +7,8 @@ namespace GamePlatform
     /// Abstract class that defines the behavior of the Game
     /// </summary>
     /// <typeparam name="T"> Type of Board </typeparam>
-    /// <typeparam name="B"> Type of Player Collection </typeparam>
+    /// <typeparam name="B"> Type of Player </typeparam>
+    /// <typeparam name="BT"> Type of Player Collection </typeparam>
     /// <typeparam name="P"> return type of Print </typeparam>
     public class Environment<T, B, BT, P> where B: Player<BT, P>
     {
@@ -36,6 +37,7 @@ namespace GamePlatform
 
         }
 
+   
         public P Print(IEnvironmentPrint<T, B, BT, P> print, PrintParameters pp)
         {
             return print.Print(this, pp);

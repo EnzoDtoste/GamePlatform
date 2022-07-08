@@ -6,13 +6,19 @@ using System.Threading.Tasks;
 
 namespace DominoPlatform
 {
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"> type of Ficha side </typeparam>
+    /// <typeparam name="P"> return type of print </typeparam>
     public class TreeN<T, P>
     {
 
         Ficha<T, P> ficha;
 
         List<TreeN<T, P>>[] hijos;
-        public int Count = 0;
+
         /// <summary>
         /// 
         /// </summary>
@@ -35,15 +41,25 @@ namespace DominoPlatform
 
         }
 
+        /// <summary>
+        /// Add a ficha to the Tree
+        /// </summary>
+        /// <param name="board_side"> side that you wich to play for </param>
+        /// <param name="ficha"></param>
+        /// <param name="index_side"> index side of the ficha that you wich to play for </param>
+        /// <returns></returns>
         public bool AddFicha(T board_side, Ficha<T, P> ficha, int index_side)
         {
 
+            //check if the play is correct
             if (!ficha.CanMatch(board_side).Contains(index_side))
                 return false;
 
+            //can I play here?
             if(this.ficha.sides.Contains(board_side))
             {
 
+                //all matching sides
                 List<int> indexof = new List<int>();
 
                 for (int i = 0; i < this.ficha.sides.Count; i++)
@@ -55,10 +71,10 @@ namespace DominoPlatform
                 foreach (int i in indexof)
                 {
 
+                    //search for a spot
                     if(hijos[i] != null && hijos[i].Count < this.ficha.plays_bySide)
                     { 
                         hijos[i].Add(new TreeN<T, P>(ficha, index_side));
-                        Count++;
                         return true;
 
                     }
@@ -89,6 +105,10 @@ namespace DominoPlatform
 
         }
 
+        /// <summary>
+        /// List of available sides wich the player can play for
+        /// </summary>
+        /// <returns></returns>
         public List<T> AvailableSides()
         {
 
@@ -114,6 +134,11 @@ namespace DominoPlatform
 
         }
 
+        /// <summary>
+        /// List of fichas at the same level
+        /// </summary>
+        /// <param name="level"></param>
+        /// <returns></returns>
         public List<Ficha<T, P>> Level(int level)
         {
 
@@ -147,6 +172,10 @@ namespace DominoPlatform
 
         }
 
+        /// <summary>
+        /// Depth of the Tree
+        /// </summary>
+        /// <returns></returns>
         public int Deep()
         {
 
@@ -173,7 +202,5 @@ namespace DominoPlatform
 
         }
 
-        
-        
     }
 }

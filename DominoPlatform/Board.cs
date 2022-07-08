@@ -14,23 +14,25 @@ namespace DominoPlatform
 
         List<Ficha<T, P>> FichasAfuera;
 
+        //play log
         List<Ficha<T, P>>[] rounds;
         
+        //scalar that defines the direction of the game
         int pass;
 
         private Board(TreeN<T, P> Collection, IEnumerable<DominoPlayer<T, P>> Players, GenerateFichas<T, P> GenerateFichas, Distribute<T, P> initialDistribute, int initialHand, PassTurn<T, P> pass) : base(Collection, Players)
         {
-            this.Collection = Collection;
+
             rounds = new List<Ficha<T, P>>[this.Players.Count];
 
             for (int i = 0; i < rounds.Length; i++)
             {
-
                 rounds[i] = new List<Ficha<T, P>>();
-
             }
 
+
             this.pass = pass(rounds, ActualPlayer);
+
 
             FichasAfuera = new List<Ficha<T, P>>(GenerateFichas());
 
@@ -39,7 +41,7 @@ namespace DominoPlatform
 
                 player.Collection.AddRange(initialDistribute(FichasAfuera, initialHand));
 
-                foreach(Ficha<T, P> ficha in player.Collection)
+                foreach (Ficha<T, P> ficha in player.Collection)
                 {
 
                     Remove(FichasAfuera, ficha);
@@ -63,6 +65,15 @@ namespace DominoPlatform
 
         }
 
+        /// <summary>
+        /// Returns a new instance of Board
+        /// </summary>
+        /// <param name="Players"></param>
+        /// <param name="GenerateFichas"> how to generate the fichas for the game </param>
+        /// <param name="initialDistribute"> how to distribute the fichas at the beginning </param>
+        /// <param name="initialHand"> amount of fichas at the start </param>
+        /// <param name="pass"> direction of the game </param>
+        /// <returns></returns>
         public static Board<T, P> StartGame(IEnumerable<DominoPlayer<T, P>> Players, GenerateFichas<T, P> GenerateFichas, Distribute<T, P> initialDistribute, int initialHand, PassTurn<T, P> pass)
         {
 
@@ -70,6 +81,13 @@ namespace DominoPlatform
 
         }
 
+        /// <summary>
+        /// Add a Ficha to the Tree Collection
+        /// </summary>
+        /// <param name="board_side"> side you wich to play for </param>
+        /// <param name="ficha"></param>
+        /// <param name="index_side"> index side of the ficha that you wich to play for </param>
+        /// <returns> if it was possible to play </returns>
         private bool AddFicha(T board_side, Ficha<T, P> ficha, int index_side)
         {
 
@@ -157,7 +175,11 @@ namespace DominoPlatform
 
         }
 
-        public Ficha<T, P> PickFicha()
+        /// <summary>
+        /// "Robar" a ficha from the non used ones at the outside
+        /// </summary>
+        /// <returns></returns>
+        private Ficha<T, P> PickFicha()
         {
 
             if (FichasAfuera.Count == 0)
@@ -172,6 +194,10 @@ namespace DominoPlatform
 
         }
 
+        /// <summary>
+        /// Designate the next player
+        /// </summary>
+        /// <param name="next"> scalar that defines the direction of the game </param>
         private void NextPlayer(int next)
         {
 
@@ -231,7 +257,11 @@ namespace DominoPlatform
     {
 
         public List<T> sides { get; private set; }
+
+        //Represents the value in a Int of each side
         public List<int> values { get; private set; }
+
+        //top plays for each side
         public int plays_bySide { get; private set; }
 
         public Ficha(List<T> sides, List<int> values, int plays_bySide)
@@ -251,6 +281,11 @@ namespace DominoPlatform
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// returns the total value of the ficha
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         public virtual int TotalValue()
         {
             throw new NotImplementedException();
@@ -258,11 +293,14 @@ namespace DominoPlatform
 
         public override bool EqualsTo(Element<P> other)
         {
+
             Ficha<T,P> f = (Ficha<T,P>)other;
+
             List<T> f1Num = new List<T>();
-            foreach (T x in this.sides) f1Num.Add(x);
+            f1Num.AddRange(this.sides);
+
             List<T> f2Num = new List<T>();
-            foreach (T y in f.sides) f2Num.Add(y);
+            f2Num.AddRange(f.sides);
 
             for (int i = 0; i < f1Num.Count; i++)
             {
@@ -270,11 +308,12 @@ namespace DominoPlatform
 
                 if (f2Num.Contains(x))
                 {
-                    f1Num.Remove(x);
+                    f1Num.RemoveAt(i);
                     f2Num.Remove(x);
                     i--;
                 }
             }
+
             return f1Num.Count == 0 && f2Num.Count == 0;
            
         }
@@ -288,6 +327,7 @@ namespace DominoPlatform
     public class DominoPlayer<T, P> : Player<List<Ficha<T, P>>, P>
     {
 
+        //how the domino player must play
         PlayFicha<T, P> Jugador;
 
         public DominoPlayer(PlayFicha<T, P> Jugador) : base(new List<Ficha<T, P>>())
@@ -305,6 +345,10 @@ namespace DominoPlatform
 
         }
 
+        /// <summary>
+        /// returns the total value of the player´s hand
+        /// </summary>
+        /// <returns></returns>
         public int TotalValues()
         {
 
@@ -312,9 +356,7 @@ namespace DominoPlatform
 
             foreach(Ficha<T, P> ficha in Collection)
             {
-
                 total += ficha.TotalValue();
-
             }
 
             return total;
@@ -352,6 +394,13 @@ namespace DominoPlatform
 
     public delegate int PassTurn<T, P>(List<Ficha<T, P>>[] Rounds, int actualPlayer);
 
+    /// <summary>
+    /// determine who are the winners
+    /// </summary>
+    /// <typeparam name="T"> type of ficha´s side </typeparam>
+    /// <typeparam name="P"> return type of print </typeparam>
+    /// <param name="players"></param>
+    /// <returns></returns>
     public delegate List<int> Winner<T, P>(in List<DominoPlayer<T, P>> players);
 
     #endregion

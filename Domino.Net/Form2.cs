@@ -19,13 +19,18 @@ namespace Domino.Net
         
         public Form2(Form1 f1)
         {
-
             InitializeComponent();
-
             this.f1 = f1;
-
         }
 
+        /// <summary>
+        /// Invokes the Initialize method at the Form1
+        /// </summary>
+        /// <typeparam name="F"></typeparam>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="collection"> Collection sides for the ficha </param>
+        /// <param name="values"> Value represented in a Int, of each side </param>
+        /// <param name="print"> how the ficha print it self </param>
         public void Initialize<F, T>(List<T> collection, List<int> values, Func<List<T>, PrintParameters, Image> print) where F: Ficha<T, Image>
         {
             
@@ -84,12 +89,8 @@ namespace Domino.Net
             f1.Initialize<F, T>(generate, distribute, checkBox2.Checked, players, new PrintGame<T>(), pass, winner, (int)numericUpDown1.Value, conditions.ToArray());
 
         }
-
-        private void Form2_FormClosing(object sender, FormClosingEventArgs e)
-        {
-
-           
-        }
+        
+        //Remove player from list
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
 
@@ -107,21 +108,46 @@ namespace Domino.Net
 
         }
 
+        //Start the game
         private void button2_Click(object sender, EventArgs e)
         {
-            if (listBox1.Items.Count > 1)
+            if (listBox1.Items.Count >= 2)
             {
-                
+
+                List<int> values = new List<int>();
+
+                for (int i = 1; i <= numericUpDown6.Value + 1; i++)
+                    values.Add(i);
+
+                List<int> nums = new List<int>();
+
+                for (int i = 0; i <= numericUpDown6.Value; i++)
+                    nums.Add(i);
+
                 if (comboBox1.Text == "Int")
-                    Initialize<FichaClassic<int>, int>(new List<int>() { 0, 1, 2, 3, 4, 5, 6 }, new List<int>() { 1, 2, 3, 4, 5, 6, 7 }, PrintInt);
+                    Initialize<FichaClassic<int>, int>(nums, values, PrintInt);
 
                 else if (comboBox1.Text == "Int Multiple of 3")
-                    Initialize<FichaInt3, int>(new List<int>() { 0, 1, 2, 3, 4, 5, 6 }, new List<int>() { 1, 2, 3, 4, 5, 6, 7 }, PrintInt);
+                    Initialize<FichaInt3, int>(nums, values, PrintInt);
 
                 else if (comboBox1.Text == "Color")
-                    Initialize<FichaClassic<Color>, Color>(new List<Color>() { Color.Red, Color.Black, Color.Blue, Color.Brown, Color.Green, Color.Orange, Color.Violet }, new List<int>() { 1, 2, 3, 4, 5, 6, 7 }, PrintColor);
+                {
+
+                    List<Color> colors = new List<Color>();
+
+                    Random r = new Random();
+
+                    for(int i = 0; i <= numericUpDown6.Value; i++)
+                        colors.Add(Color.FromArgb(r.Next(255), r.Next(255), r.Next(255)));
+
+                    Initialize<FichaClassic<Color>, Color>(colors, values, PrintColor);
+
+                }
+
                 this.Hide();
+            
             }
+
             else MessageBox.Show("There must be at least two players‼");
         }
 
@@ -174,22 +200,38 @@ namespace Domino.Net
             }
         }
 
+        /// <summary>
+        /// how many fichas will be generated with the actual settings
+        /// </summary>
+        /// <returns></returns>
         public long CollectionCount()
         {
             int sides = (int)numericUpDown3.Value;
-            return Factorial(7 + sides - 1) / (Factorial(sides) * Factorial(6));
+            return Factorial((int)numericUpDown6.Value + 1 + sides - 1) / (Factorial(sides) * Factorial((int)numericUpDown6.Value));
         }
 
+        Dictionary<int, long> facs = new Dictionary<int, long>();
+
+        /// <summary>
+        /// Factorial of a natural number
+        /// </summary>
+        /// <param name="num"></param>
+        /// <returns></returns>
         public long Factorial(int num)
         {
-            long result = 1;
-            for (int i = 2; i <= num; i++)
-            {
-                result *= i;
-            }
-            return result;
+
+            if (num == 0)
+                return 1;
+
+            if (facs.ContainsKey(num))
+                return facs[num];
+
+            facs.Add(num, num * Factorial(num - 1));
+            return facs[num];
+
         }
 
+        //add player to list
         private void button1_Click(object sender, EventArgs e)
         {
 
@@ -208,7 +250,7 @@ namespace Domino.Net
 
         }
         
-       
+        //Player that plays the first valid move that it founds
         (T, Ficha<T, Image>, int) PlayFirst<T>(List<Ficha<T, Image>>[] Rounds, List<T> sides, List<Ficha<T, Image>> hand)
         {
 
@@ -234,6 +276,7 @@ namespace Domino.Net
 
         }
 
+        //Player who plays a random valid move
         public (T, Ficha<T, Image>, int) PlayRandom<T>(List<Ficha<T, Image>>[] Rounds, List<T> sides, List<Ficha<T, Image>> hand)
         {
 
@@ -247,18 +290,22 @@ namespace Domino.Net
 
         }
 
+        //Player who plays the valid move that represents the ficha with higher value
         public (T, Ficha<T, Image>, int) BotaGorda<T>(List<Ficha<T, Image>>[] Rounds, List<T> sides, List<Ficha<T, Image>> hand)
         {
-           return Botador(true, Rounds, sides, hand);
+           return Botador(true, sides, hand);
         }
+        
+        //Player who plays the valid move that represents the ficha with lower value
         public (T, Ficha<T, Image>, int) BotaSuave<T>(List<Ficha<T, Image>>[] Rounds, List<T> sides, List<Ficha<T, Image>> hand)
         {
-            return Botador(false, Rounds, sides, hand);
+            return Botador(false, sides, hand);
         }
 
-        private (T, Ficha<T, Image>, int) Botador<T>(bool botador,List<Ficha<T, Image>>[] Rounds, List<T> sides, List<Ficha<T, Image>> hand)
+        private (T, Ficha<T, Image>, int) Botador<T>(bool botador, List<T> sides, List<Ficha<T, Image>> hand)
         {
            
+            //if the game ain´t started
             if (sides == null)
             {
                 Ficha<T, Image> best = hand[0];
@@ -275,20 +322,21 @@ namespace Domino.Net
 
             (T, Ficha<T, Image>, int) Best = validMoves[0];
 
-            foreach (var play in validMoves)
+            foreach (var play in validMoves.Skip(1))
             {
+                
                 var ficha = play.Item2;
-                if (ficha == null) return play;
-
-
-                if (botador? ficha.TotalValue() > Best.Item2.TotalValue() : ficha.TotalValue() < Best.Item2.TotalValue()) Best = play;
-
+                
+                //if true I keep the higher, if false I keep the lower
+                if (botador? ficha.TotalValue() > Best.Item2.TotalValue() : ficha.TotalValue() < Best.Item2.TotalValue()) 
+                    Best = play;
 
             }
 
             return Best;
         }
 
+        //Player who plays according to some heuristic
         public (T, Ficha<T, Image>, int) PlaySmart<T>(List<Ficha<T, Image>>[] Rounds, List<T> sides, List<Ficha<T, Image>> hand)
         {
 
@@ -298,6 +346,7 @@ namespace Domino.Net
                 int max = 0;
                 Ficha<T, Image> best = null;
 
+                //I play the ficha with the most repeat side in the hand
                 foreach (var f in hand)
                 {
 
@@ -333,6 +382,7 @@ namespace Domino.Net
             (T, Ficha<T, Image>, int) rarest = (sides[0], null, -1);
             double ind = -1;
 
+            //I play the ficha that contains the side that is most repeat on the board promediado with how many other fichas I contain with that side
             foreach (var play in moves)
             {
 
@@ -419,17 +469,18 @@ namespace Domino.Net
 
         }
 
+        //given a number and a collection, return randomly that number of elements from the collection
         IEnumerable<Ficha<T, Image>> RandomDistribute<T>(List<Ficha<T, Image>> FichasCollection, int total)
         {
 
             Random r = new Random();
             var randomized = FichasCollection.OrderBy(x => r.Next());
-            foreach(var item in randomized.Take(total))
-                yield return item;
 
+            return randomized.Take(total);
 
         }
 
+        //given a number and a collection, return the firsts elements from the collection
         IEnumerable<Ficha<T, Image>> DistributeInOrder<T>(List<Ficha<T, Image>> FichasCollection, int total)
         {
 
@@ -440,20 +491,23 @@ namespace Domino.Net
 
         }
 
+        //how to print a ficha of Color type side
         public Image PrintColor(List<Color> sides, PrintParameters pp)
         {
 
             DimFicha df = (DimFicha)pp;
 
-            Image ficha = new Bitmap(df.Width, df.Height);
+            //how many levels of height will have the ficha
+            int levels = sides.Count / 2 + sides.Count % 2;
+
+            Image ficha = new Bitmap(df.Width * 2, df.Height * levels);
 
             Graphics g = Graphics.FromImage(ficha);
-
-            int levels = sides.Count / 2 + sides.Count % 2;
 
             for (int i = 0; i < levels; i++)
             {
 
+                //create the color blocks
                 Bitmap b1 = new Bitmap(10, 10);
                 Bitmap b2 = new Bitmap(10, 10);
 
@@ -468,28 +522,31 @@ namespace Domino.Net
 
                 }
 
-                g.DrawImage(b1, 0, i * (ficha.Height / levels), df.Width / 2, df.Height / levels);
+                //paint the block and the one beside him
+                g.DrawImage(b1, 0, i * (ficha.Height / levels), df.Width, df.Height);
 
                 if ((2 * i) + 1 < sides.Count)
-                    g.DrawImage(b2, ficha.Width / 2, i * (ficha.Height / levels), df.Width / 2, df.Height / levels);
+                    g.DrawImage(b2, ficha.Width / 2, i * (ficha.Height / levels), df.Width, df.Height);
 
             }
 
             return ficha;
         }
 
+        //how to print a ficha of Int type side
         public Image PrintInt(List<int> sides, PrintParameters pp)
         {
 
             DimFicha df = (DimFicha)pp;
 
-            Image ficha = new Bitmap(df.Width, df.Height);
+            //how many levels of height will have the ficha
+            int levels = sides.Count / 2 + sides.Count % 2;
+
+            Image ficha = new Bitmap(df.Width * 2, df.Height * levels);
 
             Graphics g = Graphics.FromImage(ficha);
 
-            int levels = sides.Count / 2 + sides.Count % 2;
-
-            Image[] numbers = new Image[7];
+            Image[] numbers = new Image[10];
 
             numbers[0] = Domino.Net.Properties.Resources._0;
             numbers[1] = Domino.Net.Properties.Resources._1;
@@ -498,14 +555,30 @@ namespace Domino.Net
             numbers[4] = Domino.Net.Properties.Resources._4;
             numbers[5] = Domino.Net.Properties.Resources._5;
             numbers[6] = Domino.Net.Properties.Resources._6;
+            numbers[7] = Domino.Net.Properties.Resources._7;
+            numbers[8] = Domino.Net.Properties.Resources._8;
+            numbers[9] = Domino.Net.Properties.Resources._9;
 
             for (int i = 0; i < levels; i++)
             {
 
-                g.DrawImage(numbers[sides[2 * i]], 0, i * (ficha.Height / levels), df.Width / 2, df.Height / levels);
+                //paint the block and the one beside him
+                if (sides[2 * i] < numbers.Length)
+                    g.DrawImage(numbers[sides[2 * i]], 0, i * (ficha.Height / levels), df.Width, df.Height);
+
+                //if I don´t have image for him, I paint the number
+                else
+                    g.DrawString(sides[2 * i].ToString(), new Font("Arial", df.Height / 3, FontStyle.Bold) , Brushes.Black, 10, i * (ficha.Height / levels) + 5);
 
                 if ((2 * i) + 1 < sides.Count)
-                    g.DrawImage(numbers[sides[(2 * i) + 1]], ficha.Width / 2, i * (ficha.Height / levels), df.Width / 2, df.Height / levels);
+                {
+
+                    if (sides[(2 * i) + 1] < numbers.Length)
+                        g.DrawImage(numbers[sides[(2 * i) + 1]], ficha.Width / 2, i * (ficha.Height / levels), df.Width, df.Height);
+                    else
+                        g.DrawString(sides[2 * i + 1].ToString(), new Font("Arial", df.Height / 3, FontStyle.Bold), Brushes.Black, ficha.Width / 2 + 10, i * (ficha.Height / levels) + 5);
+
+                }
 
             }
 
@@ -513,11 +586,13 @@ namespace Domino.Net
 
         }
 
+        //classic way of passing the turn
         PassTurn<T, Image> ClassicPass<T>()
         {
             return (x, y) => 1;
         }
 
+        //if the player plays a ficha with all sides equals, the direction of the game gets turned
         PassTurn<T, Image> ifDoubleInvert<T>()
         {
 
@@ -543,6 +618,7 @@ namespace Domino.Net
 
         }
 
+        //classic way of winning the game, the players with the lowest sum of values of the fichas at their hand, wins
         Winner<T, Image> ClassicWinner<T>()
         {
             return (in List<DominoPlayer<T, Image>> x) =>
@@ -564,6 +640,7 @@ namespace Domino.Net
             };
         }
 
+        //wins the players with the highest number of ficha´s side repeat 
         Winner<T, Image> EqualWinner<T>()
         {
 
@@ -607,6 +684,7 @@ namespace Domino.Net
 
         }
 
+        //returns all the valid moves for that hand
         public static List<(T, Ficha<T, Image>, int)> GetValidMoves<T>(List<T> sides, List<Ficha<T, Image>> hand)
         {
             
@@ -631,7 +709,6 @@ namespace Domino.Net
         
         }
 
-        
     }
 
     public class GenerateAllFichas<F, T> where F : Ficha<T, Image>
@@ -842,68 +919,104 @@ namespace Domino.Net
     public class PrintGame<T> : IBoardPrint<T, Image>
     {
 
-
         public Image Print(in Environment<TreeN<T, Image>, DominoPlayer<T, Image>, List<Ficha<T, Image>>, Image> environment, PrintParameters pp)
         {
 
             Board<T, Image> board = (Board<T, Image>)environment;
 
-            Image image = new Bitmap(750, 450);
+            DimGame dimGame = (DimGame)pp;
+
+            Image image = new Bitmap(dimGame.Width, dimGame.Height);
 
             Graphics g = Graphics.FromImage(image);
-            RectangleF table = new RectangleF(0, 0, 750, 450);
+            RectangleF table = new RectangleF(0, 0, dimGame.Width, dimGame.Height);
             g.DrawImage(Properties.Resources.table,table);
+
             if (board.Collection != null)
             {
                
                 int deep = board.Collection.Deep();
 
+                DimFicha dimFicha = new DimFicha(dimGame.s_ficha.Width, dimGame.s_ficha.Height);
+
+                while(Fit(deep, board.Collection.Level(0)[0].Print(dimFicha).Height, dimGame.Height))
+                {
+
+                    dimFicha.Width = (int)(dimFicha.Width / 1.25);
+                    dimFicha.Height = (int)(dimFicha.Height / 1.25);
+
+                }
+
                 for (int i = 0; i < deep; i++)
                 {
 
-                    g.DrawImage(PrintFranja(board.Collection.Level(i), 750, ((DimFicha)pp).Height, pp), 0, i * (450 / deep));
+                    g.DrawImage(PrintFranja(board.Collection.Level(i), dimGame.Width, dimGame.Height, dimFicha), 0, i * (dimGame.Height / deep));
 
                 }
 
             }
 
-            g.DrawImage(board.Players[board.ActualPlayer].Print(new PrintHand<T>(), pp), 200, 350);
+            Image hand = board.Players[board.ActualPlayer].Print(new PrintHand<T>(), dimGame.s_ficha);
+
+            if (hand.Width > dimGame.Width)
+                g.DrawImage(hand, 0, dimGame.Height - hand.Height - 20, dimGame.Width, (int)(hand.Height / ((double)hand.Width / dimGame.Width)));
+
+            else
+                g.DrawImage(hand, dimGame.Width / 2 - hand.Width / 2, dimGame.Height - hand.Height - 20);
             
            if(board.Collection != null && Form2.GetValidMoves(board.Collection.AvailableSides(),board.Players[board.ActualPlayer].Collection).Count == 0)
            {
-                Rectangle passE = new Rectangle(600, 340, 40, 40);
-                Rectangle passH = new Rectangle(594, 361, 52, 52);
+                Rectangle passE = new Rectangle(dimGame.Width - 150, dimGame.Height - 110, 40, 40);
+                Rectangle passH = new Rectangle(dimGame.Width - 156, dimGame.Height - 89, 52, 52);
                 g.DrawIcon(Properties.Resources.icons8_Explosion, passE);
                 g.DrawIcon(Properties.Resources.icons8_Hand_Rock, passH);
                 System.Media.SoundPlayer tocarMesa = new System.Media.SoundPlayer(Properties.Resources.mesa_de_noche_3__consolidated_);
                 tocarMesa.Play();
                 
            }
-            g.DrawString("Player " + board.ActualPlayer, new Font("Arial", 15, FontStyle.Bold), Brushes.Black, 550, 380);
+
+           g.DrawString("Player " + board.ActualPlayer, new Font("Arial", 15, FontStyle.Bold), Brushes.Black, dimGame.Width - 200, dimGame.Height - 70);
+
+           return image;
+
+        }
+
+        private bool Fit(int deep, int f_h, int g_h)
+        {
+            return deep * f_h > g_h;
+        }
+
+        public Image Print(in Environment<TreeN<T, Image>, DominoPlayer<T, Image>, List<Ficha<T, Image>>, Image> environment, Image Background, PrintParameters pp)
+        {
+
+
+            DimGame dimGame = (DimGame)pp;
+
+            Image image = new Bitmap(dimGame.Width, dimGame.Height);
+
+            Graphics g = Graphics.FromImage(image);
+            RectangleF table = new RectangleF(0, 0, dimGame.Width, dimGame.Height);
+            g.DrawImage(Properties.Resources.table, table);
+
+            g.DrawImage(Print(environment, pp), 0, 0);
 
             return image;
 
         }
 
-        public Image Print(in Environment<TreeN<T, Image>, DominoPlayer<T, Image>, List<Ficha<T, Image>>, Image> environment, Image Background, PrintParameters pp)
-        {
-            throw new NotImplementedException();
-        }
-
-        private Image PrintFranja(List<Ficha<T, Image>> fichas, int width, int height, PrintParameters pp)
+        private Image PrintFranja(List<Ficha<T, Image>> fichas, int width, int height, DimFicha dimFicha)
         {
 
-            Image image = new Bitmap(width, height);
+            Bitmap image = new Bitmap(width, height);
 
             Graphics g = Graphics.FromImage(image);
-            
 
             for (int i = 0; i < fichas.Count; i++)
             {
 
                 if (fichas[i] != null)
-                    g.DrawImage(fichas[i].Print(new DimFicha(100, 50)), i * (width / fichas.Count), 0);
-
+                    g.DrawImage(fichas[i].Print(dimFicha), i * (width / fichas.Count), 0);
+                
             }
 
             return image;
@@ -919,7 +1032,11 @@ namespace Domino.Net
 
             DimFicha df = (DimFicha)pp;
 
-            Image i = new Bitmap(df.Height * Collection.Count + 1, df.Width);
+            var f = Collection[0].Print(pp);
+
+            bool b = f.Width > f.Height;
+
+            Image i = new Bitmap(b ? (f.Height + 2) * Collection.Count : (f.Width + 2) * Collection.Count, b ? f.Width : f.Height);
 
             Graphics g = Graphics.FromImage(i);
 
@@ -928,9 +1045,10 @@ namespace Domino.Net
 
                 Image ficha = Collection[j].Print(pp);
 
-                ficha.RotateFlip(RotateFlipType.Rotate90FlipNone);
+                if (b)
+                    ficha.RotateFlip(RotateFlipType.Rotate90FlipNone);
 
-                g.DrawImage(ficha, j * df.Height, 0);
+                g.DrawImage(ficha, j * (b ? f.Height + 2 : f.Width + 2), 0);
             }
 
             return i;
@@ -1017,6 +1135,22 @@ namespace Domino.Net
         public override Image Print(PrintParameters pp)
         {
             return print(sides, pp);
+        }
+
+    }
+
+    public class DimGame: PrintParameters
+    {
+
+        public int Height;
+        public int Width;
+        public DimFicha s_ficha;
+
+        public DimGame(int width, int height, DimFicha dimFicha)
+        {
+            this.Height = height;
+            this.Width = width;
+            this.s_ficha = dimFicha;
         }
 
     }
