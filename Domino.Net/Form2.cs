@@ -821,20 +821,20 @@ namespace Domino.Net
         {
             if (endgame)
             {
-                Image i = new Bitmap(750, 450);
+                Image i = new Bitmap(pictureBox.Width, pictureBox.Height);
 
                 Graphics g = Graphics.FromImage(i);
-                RectangleF table = new RectangleF(0, 0, 750, 450);
-                Rectangle win = new Rectangle(350, 85, 80, 60);
+                RectangleF table = new RectangleF(0, 0, pictureBox.Width, pictureBox.Height);
+                Rectangle win = new Rectangle(pictureBox.Width / 2 - 25, 85, 80, 60);
                 g.DrawImage(Properties.Resources.table, table);
                 g.DrawIcon(Properties.Resources.icons8_Win, win);
-                g.DrawString("Player " + actualPlayer + " se pegó", new Font("Arial", 15, FontStyle.Bold), Brushes.Black, 280, 150);
+                g.DrawString("Player " + actualPlayer + " se pegó", new Font("Arial", 15, FontStyle.Bold), Brushes.Black, pictureBox.Width / 3 + 30, 150);
                 System.Media.SoundPlayer estoyPegao = new System.Media.SoundPlayer(Properties.Resources.untitled_2022_06_30_23_15_09_REC__consolidated_);
                 estoyPegao.Play();
                 var winners = winner(players);
                 
                 for (int j = 0; j < winners.Count; j++)
-                    g.DrawString("Player " + winners[j] + " ganó", new Font("Arial", 15, FontStyle.Bold), Brushes.Black, 280, 200 + j * 40);
+                    g.DrawString("Player " + winners[j] + " ganó", new Font("Arial", 15, FontStyle.Bold), Brushes.Black, pictureBox.Width / 3 + 30, 200 + j * 40);
 
                 pictureBox.Image = i;
                 pictureBox.Refresh();
@@ -883,21 +883,21 @@ namespace Domino.Net
 
         public bool Finish(in List<DominoPlayer<T, Image>> players, int actualPlayer, Winner<T, Image> winner)
         {
-            Image i = new Bitmap(750, 450);
+            Image i = new Bitmap(pictureBox.Width, pictureBox.Height);
 
             Graphics g = Graphics.FromImage(i);
-            RectangleF table = new RectangleF(0, 0, 750, 450);
-            Rectangle win = new Rectangle(350, 85, 80, 60);
+            RectangleF table = new RectangleF(0, 0, pictureBox.Width, pictureBox.Height);
+            Rectangle win = new Rectangle(pictureBox.Width / 2 - 25, 85, 80, 60);
             g.DrawImage(Properties.Resources.table, table);
             g.DrawIcon(Properties.Resources.icons8_Win, win);
-            g.DrawString("Se Tranco", new Font("Arial", 15, FontStyle.Bold), Brushes.Black, 280, 150);
+            g.DrawString("Se Tranco", new Font("Arial", 15, FontStyle.Bold), Brushes.Black, pictureBox.Width / 3 + 30, 150);
             System.Media.SoundPlayer applause = new System.Media.SoundPlayer(Properties.Resources.applause___Part_1);
             applause.Play();
 
             var winners = winner(players);
 
             for (int j = 0; j < winners.Count; j++)
-                g.DrawString("Player " + winners[j] + " ganó", new Font("Arial", 15, FontStyle.Bold), Brushes.Black, 280, 200 + j * 40);
+                g.DrawString("Player " + winners[j] + " ganó", new Font("Arial", 15, FontStyle.Bold), Brushes.Black, pictureBox.Width / 3 + 30, 200 + j * 40);
 
             pictureBox.Image = i;
 
@@ -919,6 +919,8 @@ namespace Domino.Net
     public class PrintGame<T> : IBoardPrint<T, Image>
     {
 
+        DimFicha dimFicha;
+
         public Image Print(in Environment<TreeN<T, Image>, DominoPlayer<T, Image>, List<Ficha<T, Image>>, Image> environment, PrintParameters pp)
         {
 
@@ -937,7 +939,8 @@ namespace Domino.Net
                
                 int deep = board.Collection.Deep();
 
-                DimFicha dimFicha = new DimFicha(dimGame.s_ficha.Width, dimGame.s_ficha.Height);
+                if (dimFicha == null)
+                    dimFicha = new DimFicha(dimGame.s_ficha.Width, dimGame.s_ficha.Height);
 
                 while(Fit(deep, board.Collection.Level(0)[0].Print(dimFicha).Height, dimGame.Height))
                 {
@@ -1029,6 +1032,9 @@ namespace Domino.Net
     {
         public Image Print(List<Ficha<T, Image>> Collection, GamePlatform.PrintParameters pp)
         {
+
+            if (Collection.Count == 0)
+                return new Bitmap(0, 0);
 
             DimFicha df = (DimFicha)pp;
 

@@ -133,6 +133,16 @@ namespace StarCraft.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap fire_ball {
+            get {
+                object obj = ResourceManager.GetObject("fire ball", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap fondo_tierra_clara {
             get {
                 object obj = ResourceManager.GetObject("fondo tierra clara", resourceCulture);

@@ -14,7 +14,7 @@ namespace Domino.Net
 
         Form2 Stats;
 
-        DimGame dimGame = new DimGame(750, 450, new DimFicha(40, 40));
+        DimGame dimGame;
 
         public Form1()
         {
@@ -25,6 +25,8 @@ namespace Domino.Net
             Stats = new Form2(this);
             Stats.ShowDialog();
             
+            dimGame = new DimGame(pictureBox1.Width, pictureBox1.Height, new DimFicha(40, 40));
+
             pictureBox1.Image = board.Print(print, dimGame);
             
         }
@@ -83,7 +85,7 @@ namespace Domino.Net
             this.conditions = conditions;
             this.robar = robar;
 
-            dimGame = new DimGame(750, 450, new DimFicha(40, 40));
+            dimGame = new DimGame(pictureBox1.Width, pictureBox1.Height, new DimFicha(40, 40));
 
             timer1.Start();
 
@@ -91,9 +93,18 @@ namespace Domino.Net
 
         private void startNewGameToolStripMenuItem_Click(object sender, EventArgs e)
         {
+
+            bool wasWorking = false;
+
+            wasWorking = timer1.Enabled;
+
             timer1.Stop();
+
             this.Stats.ShowDialog();
-            timer1.Start();
+
+            if (wasWorking)
+                timer1.Start();
+        
         }
 
         //slow plays
@@ -128,7 +139,7 @@ namespace Domino.Net
         private void button3_Click(object sender, EventArgs e)
         {
             timer1.Interval -= timer1.Interval/2;
-            if (timer1.Interval <= 250)
+            if (timer1.Interval <= 100)
             {
                 button3.Enabled = false;
             }

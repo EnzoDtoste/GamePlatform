@@ -45,10 +45,9 @@
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.SystemColors.Control;
-            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.pictureBox1.Location = new System.Drawing.Point(163, 31);
+            this.pictureBox1.Location = new System.Drawing.Point(212, 33);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(750, 450);
+            this.pictureBox1.Size = new System.Drawing.Size(825, 495);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
@@ -70,7 +69,7 @@
             this.fileToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(913, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(1052, 28);
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -92,7 +91,7 @@
             // button1
             // 
             this.button1.BackColor = System.Drawing.Color.Bisque;
-            this.button1.Location = new System.Drawing.Point(509, 502);
+            this.button1.Location = new System.Drawing.Point(580, 559);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(40, 28);
             this.button1.TabIndex = 3;
@@ -103,7 +102,7 @@
             // button2
             // 
             this.button2.BackColor = System.Drawing.Color.Bisque;
-            this.button2.Location = new System.Drawing.Point(555, 502);
+            this.button2.Location = new System.Drawing.Point(626, 559);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(40, 28);
             this.button2.TabIndex = 4;
@@ -114,7 +113,7 @@
             // button3
             // 
             this.button3.BackColor = System.Drawing.Color.Bisque;
-            this.button3.Location = new System.Drawing.Point(601, 502);
+            this.button3.Location = new System.Drawing.Point(672, 559);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(40, 28);
             this.button3.TabIndex = 5;
@@ -128,7 +127,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gray;
             this.BackgroundImage = global::Domino.Net.Properties.Resources.madera;
-            this.ClientSize = new System.Drawing.Size(913, 542);
+            this.ClientSize = new System.Drawing.Size(1052, 618);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);

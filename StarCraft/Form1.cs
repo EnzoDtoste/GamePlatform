@@ -25,10 +25,10 @@ namespace StarCraft
             Image sword = StarCraft.Properties.Resources.espada;
             sword.RotateFlip(RotateFlipType.RotateNoneFlipX);
 
-            Weapon<Image> sunWand = new Weapon<Image>("Sun Wand", 27, 8, 15, StarCraft.Properties.Resources.Vara, PrintObject, ClassicAttack);
+            Weapon<Image> sunWand = new Weapon<Image>("Sun Wand", 27, 8, 15, StarCraft.Properties.Resources.Vara, PrintObject, FireBallAttack);
             Weapon<Image> goldWand = new Weapon<Image>("Gold Wand", 25, 7, 13, StarCraft.Properties.Resources.Wand, PrintObject, ClassicAttack);
             Weapon<Image> infernalAxe = new Weapon<Image>("Infernal Axe", 35, 2, 10, StarCraft.Properties.Resources.Hacha, PrintObject, ClassicAttack);
-            Weapon<Image> mediumAxe = new Weapon<Image>("Medium Axe", 30, 4, 7, StarCraft.Properties.Resources.Axe, PrintObject, ClassicAttack);
+            Weapon<Image> mediumAxe = new Weapon<Image>("Medium Axe", 30, 4, 7, StarCraft.Properties.Resources.Axe, PrintObject, FireBallAttack);
             Weapon<Image> redSword = new Weapon<Image>("Red Sword", 29, 5, 8, sword, PrintObject, ClassicAttack);
             Weapon<Image> silverSword = new Weapon<Image>("Silver Sword", 25, 5, 8, StarCraft.Properties.Resources.sword, PrintObject, ClassicAttack);
 
@@ -115,6 +115,59 @@ namespace StarCraft
 
                 else
                 { t.Stop(); pictureBox1.Image = old; }
+
+            };
+
+            t.Start();
+
+        }
+
+        void FireBallAttack(int ratio, PrintParameters pp)
+        {
+
+            Location l = (Location)pp;
+
+            System.Windows.Forms.Timer t = new System.Windows.Forms.Timer();
+
+            List<(int, int, int)> bolas = new List<(int, int, int)>();
+
+            int count = 0;
+
+            t.Interval = 100;
+
+            t.Tick += delegate
+            {
+
+                Image e = field.Print(new PrintGame(), StarCraft.Properties.Resources.fondo_tierra_clara, new DimObject(100, 100, true));
+
+                Graphics g = Graphics.FromImage(e);
+
+                Random r = new Random();
+
+                if (count < ratio * 2)
+                {
+                    bolas.Add((l.x - r.Next(-1 * ratio * 25, ratio * 25), l.y - r.Next(-1 * ratio * 25, ratio * 25), 0));
+                    count++;
+                }
+
+                foreach (var posBola in bolas)
+                    g.DrawImage(StarCraft.Properties.Resources.fire_ball, posBola.Item1, posBola.Item2, 40, 60);
+
+                for (int i = 0; i < bolas.Count; i++)
+                {
+
+                    if (bolas[i].Item3 < 3)
+                        bolas[i] = (bolas[i].Item1, bolas[i].Item2 + 5, bolas[i].Item3 + 1);
+                    else
+                    { bolas.RemoveAt(i); i--; }
+
+                }
+
+                pictureBox1.Image = e;
+                pictureBox1.Refresh();
+
+                if (bolas.Count == 0)
+                { t.Stop(); pictureBox1.Image = field.Print(new PrintGame(), StarCraft.Properties.Resources.fondo_tierra_clara, new DimObject(100, 100, true)); }
 
             };
 
