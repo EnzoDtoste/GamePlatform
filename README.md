@@ -26,7 +26,7 @@ Cuando se presiona el botón ` Start Game `, si hay la cantidad de jugadores nec
 
 # Starcraft
 ![StarCraft](https://user-images.githubusercontent.com/96163553/179049857-4bb5aa47-63ee-451e-9182-6c754c2f2e7b.png)
-## Insrucciones
+## Instrucciones
 - Arrows(➡,⬅,⬆,⬇): Moverse.
 - P : Pasar el turno.
 - A : Atacar.
