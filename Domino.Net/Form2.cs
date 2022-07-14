@@ -122,7 +122,7 @@ namespace Domino.Net
 
                 List<int> values = new List<int>();
 
-                for (int i = 1; i <= numericUpDown6.Value + 1; i++)
+                for (int i = 0; i <= numericUpDown6.Value + 1; i++)
                     values.Add(i);
 
                 List<int> nums = new List<int>();
@@ -647,10 +647,16 @@ namespace Domino.Net
             {
 
                 int menor = x[0].TotalValues();
+                List<int> pegados = new List<int>();
                 List<int> indexes = new List<int>() { 0 };
-
+                for(int i = 0; i < x.Count; i++)
+                {
+                    if (x[i].Collection.Count == 0) pegados.Add(i);
+                }
+                if (pegados.Count > 0) return pegados;
                 for (int i = 1; i < x.Count; i++)
                 {
+
                     if (x[i].TotalValues() == menor)
                         indexes.Add(i);
                     else if (x[i].TotalValues() < menor)

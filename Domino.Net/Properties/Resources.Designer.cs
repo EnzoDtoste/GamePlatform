@@ -171,6 +171,16 @@ namespace Domino.Net.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ABSTRACT_WALLPER_HD_1680X1050_1741 {
+            get {
+                object obj = ResourceManager.GetObject("ABSTRACT WALLPER HD 1680X1050-1741", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
         /// </summary>
         internal static System.IO.UnmanagedMemoryStream applause___Part_1 {
@@ -244,6 +254,16 @@ namespace Domino.Net.Properties {
         internal static System.IO.UnmanagedMemoryStream untitled_2022_06_30_23_15_09_REC__consolidated_ {
             get {
                 return ResourceManager.GetStream("untitled_2022_06_30_23_15_09_REC__consolidated_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Wood {
+            get {
+                object obj = ResourceManager.GetObject("Wood", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
     }

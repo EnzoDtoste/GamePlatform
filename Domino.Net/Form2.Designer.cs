@@ -505,7 +505,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DarkGray;
-            this.BackgroundImage = global::Domino.Net.Properties.Resources.ABSTRACT_WALLPER_HD_1680X1050_174;
+            this.BackgroundImage = global::Domino.Net.Properties.Resources.ABSTRACT_WALLPER_HD_1680X1050_1741;
             this.ClientSize = new System.Drawing.Size(804, 601);
             this.Controls.Add(this.checkBox4);
             this.Controls.Add(this.numericUpDown6);

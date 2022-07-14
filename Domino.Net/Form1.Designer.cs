@@ -45,7 +45,7 @@
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.SystemColors.Control;
-            this.pictureBox1.Location = new System.Drawing.Point(212, 33);
+            this.pictureBox1.Location = new System.Drawing.Point(182, 31);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(825, 495);
             this.pictureBox1.TabIndex = 0;
@@ -69,7 +69,7 @@
             this.fileToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1052, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(1008, 28);
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -126,8 +126,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gray;
-            this.BackgroundImage = global::Domino.Net.Properties.Resources.ABSTRACT_WALLPER_HD_1680X1050_174;
-            this.ClientSize = new System.Drawing.Size(1052, 618);
+            this.BackgroundImage = global::Domino.Net.Properties.Resources.Wood;
+            this.ClientSize = new System.Drawing.Size(1008, 618);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
