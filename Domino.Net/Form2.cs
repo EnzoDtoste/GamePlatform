@@ -846,7 +846,7 @@ namespace Domino.Net
                 
                 for(int i = 0; i < f.values.Count; i++)
                 {
-                    if (f.values[i] == 6 && !f.used_sides.Contains(i))
+                    if (f.values[i] == 5 && !f.used_sides.Contains(i))
                         return true;
                 }
 
