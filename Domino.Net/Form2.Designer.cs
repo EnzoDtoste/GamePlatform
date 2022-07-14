@@ -59,6 +59,7 @@
             this.button2 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.numericUpDown6 = new System.Windows.Forms.NumericUpDown();
+            this.checkBox4 = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
@@ -487,6 +488,18 @@
             0,
             0});
             // 
+            // checkBox4
+            // 
+            this.checkBox4.AutoSize = true;
+            this.checkBox4.BackColor = System.Drawing.Color.Transparent;
+            this.checkBox4.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.checkBox4.Location = new System.Drawing.Point(407, 354);
+            this.checkBox4.Name = "checkBox4";
+            this.checkBox4.Size = new System.Drawing.Size(66, 32);
+            this.checkBox4.TabIndex = 27;
+            this.checkBox4.Text = "Plin";
+            this.checkBox4.UseVisualStyleBackColor = false;
+            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -494,6 +507,7 @@
             this.BackColor = System.Drawing.Color.DarkGray;
             this.BackgroundImage = global::Domino.Net.Properties.Resources.ABSTRACT_WALLPER_HD_1680X1050_174;
             this.ClientSize = new System.Drawing.Size(804, 601);
+            this.Controls.Add(this.checkBox4);
             this.Controls.Add(this.numericUpDown6);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.button2);
@@ -573,5 +587,6 @@
         private Button button2;
         private Label label2;
         private NumericUpDown numericUpDown6;
+        private CheckBox checkBox4;
     }
 }

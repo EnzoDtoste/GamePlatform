@@ -43,7 +43,9 @@ namespace Domino.Net
                 conditions.Add(new MePegue<T>((int)numericUpDown2.Value, f1.pictureBox1, checkBox1.Checked));
 
             conditions.Add(new SeTranco<T>(f1.pictureBox1));
-            conditions.Add(new Plin<T>());
+
+            if (checkBox4.Checked)
+                conditions.Add(new Plin<T>());
 
             Distribute<T, Image> distribute;
 
