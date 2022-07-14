@@ -1,11 +1,11 @@
 # GamePlatform: A Platform for all Games
-## Este es un repsitorio hecho en Windows Form, consta de dos proyectos ejecutables:
+## Este es un repositorio hecho en Windows Form, consta de dos proyectos ejecutables:
  
  - Domino.Net
  - StarCraft
  
  # Domino
-Tiene la posibilidad de escoger como quiere que funcione el juego, los cambios que realice seran controlados para que sean válidos. 
+Tiene la posibilidad de escoger como quiere que funcione el juego, los cambios que realice serán controlados para que sean válidos. 
 
 Cuando se presiona el botón ` Start Game `, si hay la cantidad de jugadores necesarios, se inicializa el juego.
 
