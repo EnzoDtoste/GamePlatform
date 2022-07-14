@@ -27,7 +27,8 @@ Cuando se presiona el botón ` Start Game `, si hay la cantidad de jugadores nec
 - __Plays by sides__: Jugadas válidas por cada cara de la ficha.
 
 # Starcraft
-![StarCraft](https://user-images.githubusercontent.com/96163553/179049857-4bb5aa47-63ee-451e-9182-6c754c2f2e7b.png)
+![StarCraft 2](https://user-images.githubusercontent.com/96163553/179073770-21e0cd48-7519-4f1c-b791-6e1f25cbc4cd.png)
+
 ## Instrucciones
 - Arrows(➡,⬅,⬆,⬇): Moverse.
 - P : Pasar el turno.
