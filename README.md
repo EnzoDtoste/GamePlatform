@@ -6,8 +6,8 @@
  
  # Domino
 Tiene la posibilidad de escoger como quiere que funcione el juego, los cambios que realice serán controlados para que sean válidos. 
-
 Cuando se presiona el botón ` Start Game `, si hay la cantidad de jugadores necesarios, se inicializa el juego.
+
 ![settings](https://user-images.githubusercontent.com/96163553/179070482-c8eb3529-2852-4571-bf4a-1f74fd944e06.png)
 
 
