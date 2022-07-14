@@ -73,7 +73,8 @@ namespace DominoPlatform
 
                     //search for a spot
                     if(hijos[i] != null && hijos[i].Count < this.ficha.plays_bySide)
-                    { 
+                    {
+                        ficha.used_sides.Add(index_side);
                         hijos[i].Add(new TreeN<T, P>(ficha, index_side));
                         return true;
 

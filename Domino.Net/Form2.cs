@@ -31,15 +31,19 @@ namespace Domino.Net
         /// <param name="collection"> Collection sides for the ficha </param>
         /// <param name="values"> Value represented in a Int, of each side </param>
         /// <param name="print"> how the ficha print it self </param>
-        public void Initialize<F, T>(List<T> collection, List<int> values, Func<List<T>, PrintParameters, Image> print) where F: Ficha<T, Image>
+        public void Initialize<F, T>(List<T> collection, List<int> values, Func<List<T>, List<int>, PrintParameters, Image> print) where F: Ficha<T, Image>
         {
             
             List<IConditions<T, Image>> conditions = new List<IConditions<T,Image>>();
+
+            if (checkBox2.Checked)
+                conditions.Add(new Robar<T>());
 
             if (checkBox3.Checked)
                 conditions.Add(new MePegue<T>((int)numericUpDown2.Value, f1.pictureBox1, checkBox1.Checked));
 
             conditions.Add(new SeTranco<T>(f1.pictureBox1));
+            conditions.Add(new Plin<T>());
 
             Distribute<T, Image> distribute;
 
@@ -86,7 +90,7 @@ namespace Domino.Net
                     players.Add(PlaySmart);
             }
 
-            f1.Initialize<F, T>(generate, distribute, checkBox2.Checked, players, new PrintGame<T>(), pass, winner, (int)numericUpDown1.Value, conditions.ToArray());
+            f1.Initialize<F, T>(generate, distribute, players, new PrintGame<T>(), pass, winner, (int)numericUpDown1.Value, conditions.ToArray());
 
         }
         
@@ -492,7 +496,7 @@ namespace Domino.Net
         }
 
         //how to print a ficha of Color type side
-        public Image PrintColor(List<Color> sides, PrintParameters pp)
+        public Image PrintColor(List<Color> sides, List<int> used_sides, PrintParameters pp)
         {
 
             DimFicha df = (DimFicha)pp;
@@ -525,8 +529,18 @@ namespace Domino.Net
                 //paint the block and the one beside him
                 g.DrawImage(b1, 0, i * (ficha.Height / levels), df.Width, df.Height);
 
+                if (used_sides.Contains(2 * i))
+                    g.DrawRectangle(new Pen(sides[2 * i] == Color.Red ? Color.Black : Color.Red, 3), 0, i * (ficha.Height / levels), df.Width, df.Height);
+
                 if ((2 * i) + 1 < sides.Count)
+                {
+
                     g.DrawImage(b2, ficha.Width / 2, i * (ficha.Height / levels), df.Width, df.Height);
+
+                    if (used_sides.Contains(2 * i + 1))
+                        g.DrawRectangle(new Pen(sides[2 * i + 1] == Color.Red ? Color.Black : Color.Red, 3), ficha.Width / 2, i * (ficha.Height / levels), df.Width, df.Height);
+
+                }
 
             }
 
@@ -534,7 +548,7 @@ namespace Domino.Net
         }
 
         //how to print a ficha of Int type side
-        public Image PrintInt(List<int> sides, PrintParameters pp)
+        public Image PrintInt(List<int> sides, List<int> used_sides, PrintParameters pp)
         {
 
             DimFicha df = (DimFicha)pp;
@@ -570,6 +584,9 @@ namespace Domino.Net
                 else
                     g.DrawString(sides[2 * i].ToString(), new Font("Arial", df.Height / 3, FontStyle.Bold) , Brushes.Black, 10, i * (ficha.Height / levels) + 5);
 
+                if (used_sides.Contains(2 * i))
+                    g.DrawRectangle(new Pen(Brushes.Red, 3), 0, i * (ficha.Height / levels), df.Width, df.Height);
+
                 if ((2 * i) + 1 < sides.Count)
                 {
 
@@ -577,6 +594,9 @@ namespace Domino.Net
                         g.DrawImage(numbers[sides[(2 * i) + 1]], ficha.Width / 2, i * (ficha.Height / levels), df.Width, df.Height);
                     else
                         g.DrawString(sides[2 * i + 1].ToString(), new Font("Arial", df.Height / 3, FontStyle.Bold), Brushes.Black, ficha.Width / 2 + 10, i * (ficha.Height / levels) + 5);
+
+                    if(used_sides.Contains(2 * i + 1))
+                        g.DrawRectangle(new Pen(Brushes.Red, 3), ficha.Width / 2, i * (ficha.Height / levels), df.Width, df.Height);
 
                 }
 
@@ -718,13 +738,13 @@ namespace Domino.Net
         List<int> values;
         int sides;
         int play_bySides;
-        Func<List<T>, PrintParameters, Image> print;
+        Func<List<T>, List<int>, PrintParameters, Image> print;
         int top;
 
-        public GenerateAllFichas(List<T> collection, List<int> values, int sides, int play_bySides, Func<List<T>, PrintParameters, Image> print)
+        public GenerateAllFichas(List<T> collection, List<int> values, int sides, int play_bySides, Func<List<T>, List<int>, PrintParameters, Image> print)
         { this.collection = collection; this.values = values; this.sides = sides; this.play_bySides = play_bySides; this.print = print; top = -1; }
 
-        public GenerateAllFichas(List<T> collection, List<int> values, int sides, int play_bySides, Func<List<T>, PrintParameters, Image> print, int top)
+        public GenerateAllFichas(List<T> collection, List<int> values, int sides, int play_bySides, Func<List<T>, List<int>, PrintParameters, Image> print, int top)
         { this.collection = collection; this.values = values; this.sides = sides; this.play_bySides = play_bySides; this.print = print; this.top = top; }
 
 
@@ -797,6 +817,68 @@ namespace Domino.Net
 
     }
 
+    public class Plin<T> : IConditions<T, Image>
+    {
+        
+        public bool Finish(Board<T, Image> board, Winner<T, Image> winner)
+        {
+
+            board.NextPlayer(board.pass);
+            return false;
+
+        }
+
+        public bool isValid(Board<T, Image> board)
+        {
+
+            var f = board.Rounds[board.ActualPlayer][board.Rounds[board.ActualPlayer].Count - 1];
+
+            if (f != null) 
+            {
+                
+                for(int i = 0; i < f.values.Count; i++)
+                {
+                    if (f.values[i] == 6 && !f.used_sides.Contains(i))
+                        return true;
+                }
+
+            }
+
+            return false;
+
+        }
+
+    }
+
+    public class Robar<T> : IConditions<T, Image>
+    {
+        public bool Finish(Board<T, Image> board, Winner<T, Image> winner)
+        {
+
+            if (board.FichasAfuera.Count > 0)
+            {
+
+                Random r = new Random();
+
+                var f = board.FichasAfuera[r.Next(board.FichasAfuera.Count)];
+                Board<T, Image>.Remove(board.FichasAfuera, f);
+
+                board.Players[board.ActualPlayer].Collection.Add(f);
+
+                board.pass = 0;
+
+            }
+
+            return false;
+        
+        }
+
+        public bool isValid(Board<T, Image> board)
+        {
+            return board.Rounds[board.ActualPlayer][board.Rounds[board.ActualPlayer].Count - 1] == null;
+        }
+    }
+
     public class MePegue<T> : IConditions<T, Image>
     {
 
@@ -817,8 +899,9 @@ namespace Domino.Net
             this.endgame = endgame;
         }
 
-        public bool Finish(in List<DominoPlayer<T, Image>> players, int actualPlayer, Winner<T, Image> winner)
+        public bool Finish(Board<T, Image> board, Winner<T, Image> winner)
         {
+            
             if (endgame)
             {
                 Image i = new Bitmap(pictureBox.Width, pictureBox.Height);
@@ -828,11 +911,11 @@ namespace Domino.Net
                 Rectangle win = new Rectangle(pictureBox.Width / 2 - 25, 85, 80, 60);
                 g.DrawImage(Properties.Resources.table, table);
                 g.DrawIcon(Properties.Resources.icons8_Win, win);
-                g.DrawString("Player " + actualPlayer + " se pegó", new Font("Arial", 15, FontStyle.Bold), Brushes.Black, pictureBox.Width / 3 + 30, 150);
+                g.DrawString("Player " + board.ActualPlayer + " se pegó", new Font("Arial", 15, FontStyle.Bold), Brushes.Black, pictureBox.Width / 3 + 30, 150);
                 System.Media.SoundPlayer estoyPegao = new System.Media.SoundPlayer(Properties.Resources.untitled_2022_06_30_23_15_09_REC__consolidated_);
                 estoyPegao.Play();
-                var winners = winner(players);
-                
+                var winners = winner(board.Players);
+
                 for (int j = 0; j < winners.Count; j++)
                     g.DrawString("Player " + winners[j] + " ganó", new Font("Arial", 15, FontStyle.Bold), Brushes.Black, pictureBox.Width / 3 + 30, 200 + j * 40);
 
@@ -843,23 +926,26 @@ namespace Domino.Net
                 return true;
             }
 
-            players[actualPlayer].Enabled = false;
+            board.Players[board.ActualPlayer].Enabled = false;
             return false;
 
         }
 
-        public bool isValid(in List<Ficha<T, Image>>[] Rounds, in List<DominoPlayer<T, Image>> players, int actualPlayer)
+        public bool isValid(Board<T, Image> board)
         {
 
+            if (!board.Players[board.ActualPlayer].Enabled)
+                return false;
+
             if (FinishHand >= 0)
-                return players[actualPlayer].Collection.Count == FinishHand;
+                return board.Players[board.ActualPlayer].Collection.Count == FinishHand;
 
             else
             {
 
                 int count = 0;
 
-                foreach (var f in Rounds[actualPlayer])
+                foreach (var f in board.Rounds[board.ActualPlayer])
                 {
                     if (f != null)
                         count++;
@@ -881,8 +967,9 @@ namespace Domino.Net
             this.pictureBox = pictureBox;
         }
 
-        public bool Finish(in List<DominoPlayer<T, Image>> players, int actualPlayer, Winner<T, Image> winner)
+        public bool Finish(Board<T, Image> board, Winner<T, Image> winner)
         {
+            
             Image i = new Bitmap(pictureBox.Width, pictureBox.Height);
 
             Graphics g = Graphics.FromImage(i);
@@ -894,7 +981,7 @@ namespace Domino.Net
             System.Media.SoundPlayer applause = new System.Media.SoundPlayer(Properties.Resources.applause___Part_1);
             applause.Play();
 
-            var winners = winner(players);
+            var winners = winner(board.Players);
 
             for (int j = 0; j < winners.Count; j++)
                 g.DrawString("Player " + winners[j] + " ganó", new Font("Arial", 15, FontStyle.Bold), Brushes.Black, pictureBox.Width / 3 + 30, 200 + j * 40);
@@ -902,18 +989,22 @@ namespace Domino.Net
             pictureBox.Image = i;
 
             return true;
+
         }
 
-        public bool isValid(in List<Ficha<T, Image>>[] Rounds, in List<DominoPlayer<T, Image>> players, int actualPlayer)
+        public bool isValid(Board<T, Image> board)
         {
-            for (int i = 0; i < Rounds.Length; i++)
+            
+            for (int i = 0; i < board.Rounds.Length; i++)
             {
-                if ((Rounds[i].Count == 0 || Rounds[i][Rounds[i].Count - 1] != null) && players[i].Enabled)
+                if ((board.Rounds[i].Count == 0 || board.Rounds[i][board.Rounds[i].Count - 1] != null) && board.Players[i].Enabled)
                     return false;
             }
 
             return true;
+        
         }
+
     }
 
     public class PrintGame<T> : IBoardPrint<T, Image>
@@ -1065,9 +1156,9 @@ namespace Domino.Net
     public class FichaClassic<T> : Ficha<T, Image>
     {
 
-        Func<List<T>, PrintParameters, Image> print;
+        Func<List<T>, List<int>, PrintParameters, Image> print;
 
-        public FichaClassic(List<T> sides, List<int> values, int plays_bySide, Func<List<T>, PrintParameters, Image> print) : base(sides, values, plays_bySide)
+        public FichaClassic(List<T> sides, List<int> values, int plays_bySide, Func<List<T>, List<int>, PrintParameters, Image> print) : base(sides, values, plays_bySide)
         {
             this.print = print;
         }
@@ -1092,12 +1183,9 @@ namespace Domino.Net
             return values.Sum();
         }
 
-       
-
-
         public override Image Print(PrintParameters pp)
         {
-            return print(sides, pp);
+            return print(sides, used_sides, pp);
         }
 
     }
@@ -1105,9 +1193,9 @@ namespace Domino.Net
     public class FichaInt3 : Ficha<int, Image>
     {
 
-        Func<List<int>, PrintParameters, Image> print;
+        Func<List<int>, List<int>, PrintParameters, Image> print;
 
-        public FichaInt3(List<int> sides, List<int> values, int plays_bySide, Func<List<int>, PrintParameters, Image> print) : base(sides, values, plays_bySide)
+        public FichaInt3(List<int> sides, List<int> values, int plays_bySide, Func<List<int>, List<int>, PrintParameters, Image> print) : base(sides, values, plays_bySide)
         {
             this.print = print;
         }
@@ -1134,13 +1222,9 @@ namespace Domino.Net
             return values.Sum();
         }
 
-        
-
-        
-
         public override Image Print(PrintParameters pp)
         {
-            return print(sides, pp);
+            return print(sides, used_sides, pp);
         }
 
     }

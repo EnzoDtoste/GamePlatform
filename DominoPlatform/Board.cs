@@ -12,27 +12,23 @@ namespace DominoPlatform
     public class Board<T, P> : Environment<TreeN<T, P>, DominoPlayer<T, P>, List<Ficha<T, P>>, P>
     {
 
-        List<Ficha<T, P>> FichasAfuera;
+        public List<Ficha<T, P>> FichasAfuera { get; protected set; }
 
         //play log
-        List<Ficha<T, P>>[] rounds;
-        
-        //scalar that defines the direction of the game
-        int pass;
+        public List<Ficha<T, P>>[] Rounds { get; protected set; }
 
-        private Board(TreeN<T, P> Collection, IEnumerable<DominoPlayer<T, P>> Players, GenerateFichas<T, P> GenerateFichas, Distribute<T, P> initialDistribute, int initialHand, PassTurn<T, P> pass) : base(Collection, Players)
+        //scalar that defines the direction of the game
+        public int pass;
+
+        private Board(TreeN<T, P> Collection, IEnumerable<DominoPlayer<T, P>> Players, GenerateFichas<T, P> GenerateFichas, Distribute<T, P> initialDistribute, int initialHand) : base(Collection, Players)
         {
 
-            rounds = new List<Ficha<T, P>>[this.Players.Count];
+            Rounds = new List<Ficha<T, P>>[this.Players.Count];
 
-            for (int i = 0; i < rounds.Length; i++)
+            for (int i = 0; i < Rounds.Length; i++)
             {
-                rounds[i] = new List<Ficha<T, P>>();
+                Rounds[i] = new List<Ficha<T, P>>();
             }
-
-
-            this.pass = pass(rounds, ActualPlayer);
-
 
             FichasAfuera = new List<Ficha<T, P>>(GenerateFichas());
 
@@ -74,10 +70,10 @@ namespace DominoPlatform
         /// <param name="initialHand"> amount of fichas at the start </param>
         /// <param name="pass"> direction of the game </param>
         /// <returns></returns>
-        public static Board<T, P> StartGame(IEnumerable<DominoPlayer<T, P>> Players, GenerateFichas<T, P> GenerateFichas, Distribute<T, P> initialDistribute, int initialHand, PassTurn<T, P> pass)
+        public static Board<T, P> StartGame(IEnumerable<DominoPlayer<T, P>> Players, GenerateFichas<T, P> GenerateFichas, Distribute<T, P> initialDistribute, int initialHand)
         {
 
-            return new Board<T, P>(null , Players, GenerateFichas, initialDistribute, initialHand, pass);
+            return new Board<T, P>(null , Players, GenerateFichas, initialDistribute, initialHand);
 
         }
 
@@ -104,70 +100,44 @@ namespace DominoPlatform
         /// <param name="passTurn"></param>
         /// <param name="endConditions"></param>
         /// <returns> false if the game is over, otherwise true </returns>
-        public bool PlayTurn(PassTurn<T, P> passTurn, bool robar, Winner<T, P> winner, params IConditions<T, P>[] endConditions)
+        public bool PlayTurn(PassTurn<T, P> passTurn, Winner<T, P> winner, params IConditions<T, P>[] endConditions)
         {
 
-            if (Players[ActualPlayer].Enabled && (Players[ActualPlayer].Collection.Count > 0 || robar))
+            if (Players[ActualPlayer].Enabled)
             {
 
                 (T, Ficha<T, P>, int) ficha;
 
                 if (this.Collection != null)
-                    ficha = Players[ActualPlayer].Play(rounds, Collection.AvailableSides());
+                    ficha = Players[ActualPlayer].Play(Rounds, Collection.AvailableSides());
 
                 else
-                    ficha = Players[ActualPlayer].Play(rounds, null);
+                    ficha = Players[ActualPlayer].Play(Rounds, null);
 
                 if (ficha.Item2 != null)
                 {
 
                     if (AddFicha(ficha.Item1, ficha.Item2, ficha.Item3))
-                        rounds[ActualPlayer].Add(ficha.Item2);
-
-                    else if (robar)
-                    {
-
-                        var f = PickFicha();
-
-                        if (f != null)
-                        { Players[ActualPlayer].Collection.Add(f); return true; }
-
-                        else
-                            rounds[ActualPlayer].Add(null);
-
-                    }
+                        Rounds[ActualPlayer].Add(ficha.Item2);
 
                     else
-                        rounds[ActualPlayer].Add(null);
-
-                }
-
-                else if (robar)
-                {
-
-                    var f = PickFicha();
-
-                    if (f != null)
-                    { Players[ActualPlayer].Collection.Add(f); return true; }
-
-                    else
-                    {
-                        rounds[ActualPlayer].Add(null);
-                        
-                    }
-                        
+                        Rounds[ActualPlayer].Add(null);
 
                 }
 
                 else
-                    rounds[ActualPlayer].Add(null);
+                    Rounds[ActualPlayer].Add(null);
 
-                if (CheckConditions(winner, endConditions))
-                    return false;
-                
             }
 
-            pass *= passTurn(rounds, ActualPlayer);
+            if (pass == 0)
+                pass = passTurn(Rounds, ActualPlayer);
+
+            else
+                pass *= passTurn(Rounds, ActualPlayer);
+
+            if (CheckConditions(winner, endConditions))
+                return false;
 
             NextPlayer(pass);
 
@@ -176,29 +146,10 @@ namespace DominoPlatform
         }
 
         /// <summary>
-        /// "Robar" a ficha from the non used ones at the outside
-        /// </summary>
-        /// <returns></returns>
-        private Ficha<T, P> PickFicha()
-        {
-
-            if (FichasAfuera.Count == 0)
-                return null;
-
-            Random r = new Random();
-
-            var f = FichasAfuera[r.Next(FichasAfuera.Count)];
-            Remove(FichasAfuera, f);
-
-            return f;
-
-        }
-
-        /// <summary>
         /// Designate the next player
         /// </summary>
         /// <param name="next"> scalar that defines the direction of the game </param>
-        private void NextPlayer(int next)
+        public void NextPlayer(int next)
         {
 
             next = next % Players.Count;
@@ -240,9 +191,9 @@ namespace DominoPlatform
 
             foreach(var condition in endConditions)
             {
-                if(condition.isValid(in rounds, Players, ActualPlayer))
+                if(condition.isValid(this))
                 {
-                    if(condition.Finish(Players, ActualPlayer, winner))
+                    if(condition.Finish(this, winner))
                         return true;
                 }
             }
@@ -258,6 +209,8 @@ namespace DominoPlatform
 
         public List<T> sides { get; private set; }
 
+        public List<int> used_sides;
+
         //Represents the value in a Int of each side
         public List<int> values { get; private set; }
 
@@ -267,6 +220,7 @@ namespace DominoPlatform
         public Ficha(List<T> sides, List<int> values, int plays_bySide)
         {
             this.sides = sides;
+            this.used_sides = new List<int>();
             this.values = values;
             this.plays_bySide = plays_bySide;
         }
@@ -408,13 +362,13 @@ namespace DominoPlatform
     public interface IConditions<T, P>
     {
 
-        public bool isValid(in List<Ficha<T, P>>[] Rounds, in List<DominoPlayer<T, P>> players, int actualPlayer);
+        public bool isValid(Board<T, P> board);
 
         /// <summary>
         ///  what to do at the end
         /// </summary>
         /// <returns> true is the game must over </returns>
-        public bool Finish(in List<DominoPlayer<T, P>> players, int actualPlayer, Winner<T, P> winner);
+        public bool Finish(Board<T, P> board, Winner<T, P> winner);
 
     }
 

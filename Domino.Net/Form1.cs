@@ -10,7 +10,6 @@ namespace Domino.Net
         dynamic pass;
         dynamic winner;
         dynamic conditions;
-        bool robar;
 
         Form2 Stats;
 
@@ -34,7 +33,7 @@ namespace Domino.Net
         private void timer1_Tick(object sender, EventArgs e)
         {
 
-            if (board.PlayTurn(pass, robar, winner, conditions))
+            if (board.PlayTurn(pass, winner, conditions))
             {
                 pictureBox1.Image = board.Print(print, dimGame);
                 button1.Enabled = true;
@@ -68,7 +67,7 @@ namespace Domino.Net
         /// <param name="winner"> how to choose the winner </param>
         /// <param name="InitialHand"> how many fichas at the start hand of each player </param>
         /// <param name="conditions"> game rules </param>
-        public void Initialize<F, T>(GenerateFichas<T, Image> generate, Distribute<T, Image> distribute, bool robar, List<PlayFicha<T, Image>> players, IBoardPrint<T, Image> print, PassTurn<T, Image> pass, Winner<T, Image> winner, int InitialHand, params IConditions<T, Image>[] conditions) where F: Ficha<T, Image>
+        public void Initialize<F, T>(GenerateFichas<T, Image> generate, Distribute<T, Image> distribute, List<PlayFicha<T, Image>> players, IBoardPrint<T, Image> print, PassTurn<T, Image> pass, Winner<T, Image> winner, int InitialHand, params IConditions<T, Image>[] conditions) where F: Ficha<T, Image>
         {
             
             List<DominoPlayer<T, Image>> dominoPlayers = new List<DominoPlayer<T, Image>>();
@@ -78,12 +77,11 @@ namespace Domino.Net
                 dominoPlayers.Add(new DominoPlayer<T, Image>(player));
             }
 
-            board = Board<T, Image>.StartGame(dominoPlayers, generate, distribute, InitialHand, pass);
+            board = Board<T, Image>.StartGame(dominoPlayers, generate, distribute, InitialHand);
             this.print = print;
             this.pass = pass;
             this.winner = winner;
             this.conditions = conditions;
-            this.robar = robar;
 
             dimGame = new DimGame(pictureBox1.Width, pictureBox1.Height, new DimFicha(40, 40));
 
