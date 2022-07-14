@@ -14,7 +14,7 @@ namespace StarCraft
             InitializeComponent();
 
             Element<Image>[,] elements = new Element<Image>[100, 100];
-
+            
             elements[3, 5] = new Trash("Bush", StarCraft.Properties.Resources.Bush);
             elements[8, 3] = new Trash("Rock", StarCraft.Properties.Resources.Rock);
             elements[24, 68] = new Trash("Rock1", StarCraft.Properties.Resources.Roca1);
@@ -47,7 +47,8 @@ namespace StarCraft
             elements[50, 50] = infernalAxe;
             elements[24, 15] = goldWand;
             elements[3, 10] = sunWand;
-
+            
+           
             List<StarPlayer<Image>> starPlayers = new List<StarPlayer<Image>>();
 
             starPlayers.Add(new StarPlayer<Image>("Witch", new Article<Image>[5] {sunWand, goldWand, blue, doublepo, redSword}, 100, 150, StarCraft.Properties.Resources.witch));
