@@ -30,7 +30,7 @@ Cuando se presiona el botón ` Start Game `, si hay la cantidad de jugadores nec
 - Arrows(➡,⬅,⬆,⬇): Moverse.
 - P : Pasar el turno.
 - A : Atacar.
-- Numpad # : Tomar el articulo #.
+- Numpad # : Tomar el artículo #.
 
 
 
