@@ -382,7 +382,7 @@ namespace Domino.Net
             (T, Ficha<T, Image>, int) rarest = (sides[0], null, -1);
             double ind = -1;
 
-            //I play the ficha that contains the side that is most repeat on the board promediado with how many other fichas I contain with that side
+            //I play the ficha that contains the side that repeats the most on the board promediated with how many other fichas I contain with that side
             foreach (var play in moves)
             {
 

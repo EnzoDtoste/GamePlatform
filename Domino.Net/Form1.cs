@@ -68,7 +68,8 @@ namespace Domino.Net
         /// <param name="winner"> how to choose the winner </param>
         /// <param name="InitialHand"> how many fichas at the start hand of each player </param>
         /// <param name="conditions"> game rules </param>
-        public void Initialize<F, T>(GenerateFichas<T, Image> generate, Distribute<T, Image> distribute, bool robar, List<PlayFicha<T, Image>> players, IBoardPrint<T, Image> print, PassTurn<T, Image> pass, Winner<T, Image> winner, int InitialHand, params IConditions<T, Image>[] conditions) where F: Ficha<T, Image>
+        public void Initialize<F, T>(GenerateFichas<T, Image> generate, Distribute<T, Image> distribute, bool robar, List<PlayFicha<T, Image>> players,
+            IBoardPrint<T, Image> print, PassTurn<T, Image> pass, Winner<T, Image> winner, int InitialHand, params IConditions<T, Image>[] conditions) where F: Ficha<T, Image>
         {
             
             List<DominoPlayer<T, Image>> dominoPlayers = new List<DominoPlayer<T, Image>>();
