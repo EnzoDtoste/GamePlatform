@@ -117,12 +117,13 @@ namespace Domino.Net
         //Start the game
         private void button2_Click(object sender, EventArgs e)
         {
+
             if (listBox1.Items.Count >= 2)
             {
 
                 List<int> values = new List<int>();
 
-                for (int i = 0; i <= numericUpDown6.Value + 1; i++)
+                for (int i = 0; i <= numericUpDown6.Value; i++)
                     values.Add(i);
 
                 List<int> nums = new List<int>();
@@ -203,6 +204,16 @@ namespace Domino.Net
             if (numericUpDown5.Enabled && (int)numericUpDown5.Value/listBox1.Items.Count < numericUpDown1.Value)
             {
                 numericUpDown1.Value = (int)numericUpDown5.Value/ listBox1.Items.Count;
+            }
+        }
+
+        private void numericUpDown6_ValueChanged(object sender, EventArgs e)
+        {
+            if ((CollectionCount() / listBox1.Items.Count) < (int)numericUpDown1.Value)
+                numericUpDown1.Value--;
+            if (numericUpDown5.Enabled && (int)numericUpDown5.Value / listBox1.Items.Count < numericUpDown1.Value)
+            {
+                numericUpDown1.Value = (int)numericUpDown5.Value / listBox1.Items.Count;
             }
         }
 
@@ -475,6 +486,7 @@ namespace Domino.Net
 
         }
 
+
         //given a number and a collection, return randomly that number of elements from the collection
         IEnumerable<Ficha<T, Image>> RandomDistribute<T>(List<Ficha<T, Image>> FichasCollection, int total)
         {
@@ -496,6 +508,7 @@ namespace Domino.Net
             }
 
         }
+
 
         //how to print a ficha of Color type side
         public Image PrintColor(List<Color> sides, List<int> used_sides, PrintParameters pp)
@@ -608,6 +621,7 @@ namespace Domino.Net
 
         }
 
+
         //classic way of passing the turn
         PassTurn<T, Image> ClassicPass<T>()
         {
@@ -640,27 +654,27 @@ namespace Domino.Net
 
         }
 
+
         //classic way of winning the game, the players with the lowest sum of values of the fichas at their hand, wins
         Winner<T, Image> ClassicWinner<T>()
         {
             return (in List<DominoPlayer<T, Image>> x) =>
             {
 
-                int menor = x[0].TotalValues();
-                List<int> pegados = new List<int>();
+                int menor = x[0].Collection.Count > 0 ? x[0].TotalValues() : -1;
                 List<int> indexes = new List<int>() { 0 };
-                for(int i = 0; i < x.Count; i++)
-                {
-                    if (x[i].Collection.Count == 0) pegados.Add(i);
-                }
-                if (pegados.Count > 0) return pegados;
+                
                 for (int i = 1; i < x.Count; i++)
                 {
 
-                    if (x[i].TotalValues() == menor)
+                    int total = x[i].Collection.Count > 0 ? x[i].TotalValues() : -1;
+
+                    if (total == menor)
                         indexes.Add(i);
-                    else if (x[i].TotalValues() < menor)
-                    { menor = x[i].TotalValues(); indexes = new List<int>() { i }; }
+
+                    else if (total < menor)
+                    { menor = total; indexes = new List<int>() { i }; }
+
                 }
 
                 return indexes;
@@ -711,6 +725,7 @@ namespace Domino.Net
             };
 
         }
+
 
         //returns all the valid moves for that hand
         public static List<(T, Ficha<T, Image>, int)> GetValidMoves<T>(List<T> sides, List<Ficha<T, Image>> hand)
@@ -824,7 +839,7 @@ namespace Domino.Net
         }
 
     }
-
+    
     public class Plin<T> : IConditions<T, Image>
     {
         
@@ -857,7 +872,6 @@ namespace Domino.Net
         }
 
     }
-
     public class Robar<T> : IConditions<T, Image>
     {
         public bool Finish(Board<T, Image> board, Winner<T, Image> winner)
@@ -886,7 +900,6 @@ namespace Domino.Net
             return board.Rounds[board.ActualPlayer][board.Rounds[board.ActualPlayer].Count - 1] == null;
         }
     }
-
     public class MePegue<T> : IConditions<T, Image>
     {
 
@@ -965,7 +978,6 @@ namespace Domino.Net
 
         }
     }
-
     public class SeTranco<T> : IConditions<T, Image>
     {
 
@@ -1014,7 +1026,7 @@ namespace Domino.Net
         }
 
     }
-
+    
     public class PrintGame<T> : IBoardPrint<T, Image>
     {
 
@@ -1126,7 +1138,6 @@ namespace Domino.Net
         }
 
     }
-
     public class PrintHand<T> : IDominoPlayerPrint<T, Image>
     {
         public Image Print(List<Ficha<T, Image>> Collection, GamePlatform.PrintParameters pp)
@@ -1160,7 +1171,7 @@ namespace Domino.Net
 
         }
     }
-
+    
     public class FichaClassic<T> : Ficha<T, Image>
     {
 
@@ -1197,7 +1208,6 @@ namespace Domino.Net
         }
 
     }
-
     public class FichaInt3 : Ficha<int, Image>
     {
 
@@ -1236,7 +1246,7 @@ namespace Domino.Net
         }
 
     }
-
+   
     public class DimGame: PrintParameters
     {
 
@@ -1252,7 +1262,6 @@ namespace Domino.Net
         }
 
     }
-
     public class DimFicha : PrintParameters
     {
 
