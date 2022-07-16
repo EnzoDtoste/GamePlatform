@@ -4,6 +4,11 @@
  - Domino.Net (principal)
  - StarCraft
 
+Desde el directorio de la solución del proyecto ejecutar en la consola:
+
+dotnet run --project Domino.Net
+dotnet run --project StarCraft
+
 ## Consta de dos bibliotecas de clases (Net Core 6.0):
  
 - DominoPlatform (principal)
