@@ -1,8 +1,13 @@
 # GamePlatform: A Platform for all Games
-## Este es un repositorio hecho en Windows Form, consta de dos proyectos ejecutables:
+## Este es un repositorio hecho en Visual Studio 2022, consta de dos proyectos ejecutables (Windows Form):
  
- - Domino.Net
+ - Domino.Net (principal)
  - StarCraft
+
+## Consta de dos bibliotecas de clases (Net Core 6.0):
+ 
+- DominoPlatform (principal)
+- StarCraftPlatform
  
  # Domino
 Tiene la posibilidad de escoger como quiere que funcione el juego, los cambios que realice serán controlados para que sean válidos. 
@@ -26,7 +31,7 @@ Cuando se presiona el botón ` Start Game `, si hay la cantidad de jugadores nec
 - __Sides__: Cantidad de lados de la ficha.
 - __Plays by sides__: Jugadas válidas por cada cara de la ficha.
 
-# Starcraft
+# StarCraft
 ![StarCraft 2](https://user-images.githubusercontent.com/96163553/179073770-21e0cd48-7519-4f1c-b791-6e1f25cbc4cd.png)
 
 ## Instrucciones
