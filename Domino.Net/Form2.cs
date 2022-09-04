@@ -1144,7 +1144,7 @@ namespace Domino.Net
         {
 
             if (Collection.Count == 0)
-                return new Bitmap(0, 0);
+                return new Bitmap(10, 10);
 
             DimFicha df = (DimFicha)pp;
 
